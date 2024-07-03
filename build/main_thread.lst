@@ -1,0 +1,208 @@
+ARM GAS  /tmp/ccE23AUP.s 			page 1
+
+
+   1              		.cpu cortex-m0plus
+   2              		.arch armv6s-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 0
+  12              		.eabi_attribute 18, 4
+  13              		.file	"main_thread.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.main_thread_init,"ax",%progbits
+  18              		.align	1
+  19              		.global	main_thread_init
+  20              		.syntax unified
+  21              		.code	16
+  22              		.thumb_func
+  24              	main_thread_init:
+  25              	.LFB341:
+  26              		.file 1 "App/main_thread.c"
+   1:App/main_thread.c **** #include "FreeRTOS.h"
+   2:App/main_thread.c **** #include "task.h"
+   3:App/main_thread.c **** #include "cmsis_os.h"
+   4:App/main_thread.c **** 
+   5:App/main_thread.c **** #include "debug.h"
+   6:App/main_thread.c **** 
+   7:App/main_thread.c **** 
+   8:App/main_thread.c **** void main_thread_init(void)
+   9:App/main_thread.c **** {
+  27              		.loc 1 9 1 view -0
+  28              		.cfi_startproc
+  29              		@ args = 0, pretend = 0, frame = 0
+  30              		@ frame_needed = 0, uses_anonymous_args = 0
+  31              		@ link register save eliminated.
+  10:App/main_thread.c **** 
+  11:App/main_thread.c **** }
+  32              		.loc 1 11 1 view .LVU1
+  33              		@ sp needed
+  34 0000 7047     		bx	lr
+  35              		.cfi_endproc
+  36              	.LFE341:
+  38              		.section	.rodata.main_thread_func.str1.4,"aMS",%progbits,1
+  39              		.align	2
+  40              	.LC2:
+  41 0000 6D61696E 		.ascii	"main_thread\012\000"
+  41      5F746872 
+  41      6561640A 
+  41      00
+  42              		.section	.text.main_thread_func,"ax",%progbits
+  43              		.align	1
+  44              		.global	main_thread_func
+  45              		.syntax unified
+ARM GAS  /tmp/ccE23AUP.s 			page 2
+
+
+  46              		.code	16
+  47              		.thumb_func
+  49              	main_thread_func:
+  50              	.LFB342:
+  12:App/main_thread.c **** 
+  13:App/main_thread.c **** 
+  14:App/main_thread.c **** void main_thread_func(void const * argument)
+  15:App/main_thread.c **** {
+  51              		.loc 1 15 1 view -0
+  52              		.cfi_startproc
+  53              		@ args = 0, pretend = 0, frame = 0
+  54              		@ frame_needed = 0, uses_anonymous_args = 0
+  55              	.LVL0:
+  56              		.loc 1 15 1 is_stmt 0 view .LVU3
+  57 0000 70B5     		push	{r4, r5, r6, lr}
+  58              	.LCFI0:
+  59              		.cfi_def_cfa_offset 16
+  60              		.cfi_offset 4, -16
+  61              		.cfi_offset 5, -12
+  62              		.cfi_offset 6, -8
+  63              		.cfi_offset 14, -4
+  64              	.LVL1:
+  65              	.L3:
+  16:App/main_thread.c **** 	for (;;) {
+  66              		.loc 1 16 2 is_stmt 1 discriminator 1 view .LVU4
+  17:App/main_thread.c **** 		HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
+  67              		.loc 1 17 3 discriminator 1 view .LVU5
+  68 0002 0221     		movs	r1, #2
+  69 0004 1448     		ldr	r0, .L4
+  70 0006 FFF7FEFF 		bl	HAL_GPIO_TogglePin
+  71              	.LVL2:
+  18:App/main_thread.c **** 
+  19:App/main_thread.c ****         debug_process();
+  72              		.loc 1 19 9 discriminator 1 view .LVU6
+  73 000a FFF7FEFF 		bl	debug_process
+  74              	.LVL3:
+  75              	.LBB2:
+  20:App/main_thread.c **** 		print_log("main_thread\n");
+  76              		.loc 1 20 3 discriminator 1 view .LVU7
+  77              		.loc 1 20 3 discriminator 1 view .LVU8
+  78              		.loc 1 20 3 discriminator 1 view .LVU9
+  79 000e 0121     		movs	r1, #1
+  80 0010 124D     		ldr	r5, .L4+4
+  81 0012 4942     		rsbs	r1, r1, #0
+  82 0014 2868     		ldr	r0, [r5]
+  83 0016 FFF7FEFF 		bl	osMutexWait
+  84              	.LVL4:
+  85              		.loc 1 20 3 discriminator 1 view .LVU10
+  86 001a 114E     		ldr	r6, .L4+8
+  87 001c 0D22     		movs	r2, #13
+  88 001e 1149     		ldr	r1, .L4+12
+  89 0020 3000     		movs	r0, r6
+  90 0022 FFF7FEFF 		bl	memcpy
+  91              	.LVL5:
+  92              		.loc 1 20 3 discriminator 1 view .LVU11
+  93 0026 0D20     		movs	r0, #13
+  94 0028 FFF7FEFF 		bl	pvPortMalloc
+ARM GAS  /tmp/ccE23AUP.s 			page 3
+
+
+  95              	.LVL6:
+  96 002c 0400     		movs	r4, r0
+  97              	.LVL7:
+  98              		.loc 1 20 3 discriminator 1 view .LVU12
+  99 002e 0C22     		movs	r2, #12
+ 100 0030 3100     		movs	r1, r6
+ 101 0032 FFF7FEFF 		bl	memcpy
+ 102              	.LVL8:
+ 103              		.loc 1 20 3 discriminator 1 view .LVU13
+ 104 0036 2868     		ldr	r0, [r5]
+ 105 0038 FFF7FEFF 		bl	osMutexRelease
+ 106              	.LVL9:
+ 107              		.loc 1 20 3 discriminator 1 view .LVU14
+ 108 003c 0023     		movs	r3, #0
+ 109 003e 6373     		strb	r3, [r4, #13]
+ 110              		.loc 1 20 3 discriminator 1 view .LVU15
+ 111 0040 0C21     		movs	r1, #12
+ 112 0042 2000     		movs	r0, r4
+ 113 0044 FFF7FEFF 		bl	uart4_send
+ 114              	.LVL10:
+ 115              		.loc 1 20 3 discriminator 1 view .LVU16
+ 116 0048 2000     		movs	r0, r4
+ 117 004a FFF7FEFF 		bl	vPortFree
+ 118              	.LVL11:
+ 119              	.LBE2:
+ 120              		.loc 1 20 29 discriminator 1 view .LVU17
+  21:App/main_thread.c **** 		osDelay(1000);
+ 121              		.loc 1 21 3 discriminator 1 view .LVU18
+ 122 004e FA20     		movs	r0, #250
+ 123 0050 8000     		lsls	r0, r0, #2
+ 124 0052 FFF7FEFF 		bl	osDelay
+ 125              	.LVL12:
+  16:App/main_thread.c **** 		HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
+ 126              		.loc 1 16 8 discriminator 1 view .LVU19
+ 127 0056 D4E7     		b	.L3
+ 128              	.L5:
+ 129              		.align	2
+ 130              	.L4:
+ 131 0058 00140050 		.word	1342182400
+ 132 005c 00000000 		.word	debug_mtxHandle
+ 133 0060 00000000 		.word	debug_buffer
+ 134 0064 00000000 		.word	.LC2
+ 135              		.cfi_endproc
+ 136              	.LFE342:
+ 138              		.text
+ 139              	.Letext0:
+ 140              		.file 2 "/home/yiyu/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/machine/_default_types.h"
+ 141              		.file 3 "/home/yiyu/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/sys/_stdint.h"
+ 142              		.file 4 "Middlewares/Third_Party/FreeRTOS/Source/include/queue.h"
+ 143              		.file 5 "Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h"
+ 144              		.file 6 "Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h"
+ 145              		.file 7 "Drivers/CMSIS/Device/ST/STM32G0xx/Include/stm32g071xx.h"
+ 146              		.file 8 "App/Include/debug.h"
+ 147              		.file 9 "Middlewares/Third_Party/FreeRTOS/Source/include/portable.h"
+ 148              		.file 10 "App/Include/uart_thread.h"
+ 149              		.file 11 "Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_gpio.h"
+ 150              		.file 12 "Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_ll_dma.h"
+ARM GAS  /tmp/ccE23AUP.s 			page 4
+
+
+ 151              		.file 13 "<built-in>"
+ARM GAS  /tmp/ccE23AUP.s 			page 5
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 main_thread.c
+     /tmp/ccE23AUP.s:18     .text.main_thread_init:0000000000000000 $t
+     /tmp/ccE23AUP.s:24     .text.main_thread_init:0000000000000000 main_thread_init
+     /tmp/ccE23AUP.s:39     .rodata.main_thread_func.str1.4:0000000000000000 $d
+     /tmp/ccE23AUP.s:43     .text.main_thread_func:0000000000000000 $t
+     /tmp/ccE23AUP.s:49     .text.main_thread_func:0000000000000000 main_thread_func
+     /tmp/ccE23AUP.s:131    .text.main_thread_func:0000000000000058 $d
+
+UNDEFINED SYMBOLS
+HAL_GPIO_TogglePin
+debug_process
+osMutexWait
+memcpy
+pvPortMalloc
+osMutexRelease
+uart4_send
+vPortFree
+osDelay
+debug_mtxHandle
+debug_buffer

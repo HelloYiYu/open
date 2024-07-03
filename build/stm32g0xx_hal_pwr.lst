@@ -1,0 +1,1341 @@
+ARM GAS  /tmp/ccwsLkcC.s 			page 1
+
+
+   1              		.cpu cortex-m0plus
+   2              		.arch armv6s-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 0
+  12              		.eabi_attribute 18, 4
+  13              		.file	"stm32g0xx_hal_pwr.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.HAL_PWR_DeInit,"ax",%progbits
+  18              		.align	1
+  19              		.global	HAL_PWR_DeInit
+  20              		.syntax unified
+  21              		.code	16
+  22              		.thumb_func
+  24              	HAL_PWR_DeInit:
+  25              	.LFB327:
+  26              		.file 1 "Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c"
+   1:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** /**
+   2:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   ******************************************************************************
+   3:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @file    stm32g0xx_hal_pwr.c
+   4:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @author  MCD Application Team
+   5:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @brief   PWR HAL module driver.
+   6:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *          This file provides firmware functions to manage the following
+   7:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *          functionalities of the Power Controller (PWR) peripheral:
+   8:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *           + Initialization/de-initialization functions
+   9:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *           + Peripheral Control functions
+  10:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *
+  11:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   ******************************************************************************
+  12:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @attention
+  13:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *
+  14:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * Copyright (c) 2018 STMicroelectronics.
+  15:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * All rights reserved.
+  16:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *
+  17:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * This software is licensed under terms that can be found in the LICENSE file
+  18:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * in the root directory of this software component.
+  19:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * If no LICENSE file comes with this software, it is provided AS-IS.
+  20:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *
+  21:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   ******************************************************************************
+  22:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   */
+  23:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** 
+  24:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** /* Includes ------------------------------------------------------------------*/
+  25:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** #include "stm32g0xx_hal.h"
+  26:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** 
+  27:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** /** @addtogroup STM32G0xx_HAL_Driver
+  28:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @{
+  29:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   */
+  30:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** 
+  31:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** /** @addtogroup PWR
+  32:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @{
+ARM GAS  /tmp/ccwsLkcC.s 			page 2
+
+
+  33:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   */
+  34:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** 
+  35:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** #ifdef HAL_PWR_MODULE_ENABLED
+  36:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** 
+  37:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** /* Private typedef -----------------------------------------------------------*/
+  38:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** /* Private define ------------------------------------------------------------*/
+  39:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** /** @defgroup PWR_Private_Defines PWR Private Defines
+  40:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @{
+  41:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   */
+  42:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** 
+  43:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** /**
+  44:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @}
+  45:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   */
+  46:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** 
+  47:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** /* Private macro -------------------------------------------------------------*/
+  48:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** /* Private variables ---------------------------------------------------------*/
+  49:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** /* Private function prototypes -----------------------------------------------*/
+  50:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** /* Exported functions --------------------------------------------------------*/
+  51:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** /** @addtogroup PWR_Exported_Functions  PWR Exported Functions
+  52:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @{
+  53:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   */
+  54:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** 
+  55:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** /** @addtogroup PWR_Exported_Functions_Group1  Initialization and de-initialization functions
+  56:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @brief  Initialization and de-initialization functions
+  57:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *
+  58:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** @verbatim
+  59:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****  ===============================================================================
+  60:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****               ##### Initialization and de-initialization functions #####
+  61:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****  ===============================================================================
+  62:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****     [..]
+  63:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** 
+  64:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** @endverbatim
+  65:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @{
+  66:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   */
+  67:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** 
+  68:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** /**
+  69:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @brief  Deinitialize the HAL PWR peripheral registers to their default reset
+  70:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****             values.
+  71:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @retval None
+  72:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   */
+  73:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** void HAL_PWR_DeInit(void)
+  74:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** {
+  27              		.loc 1 74 1 view -0
+  28              		.cfi_startproc
+  29              		@ args = 0, pretend = 0, frame = 0
+  30              		@ frame_needed = 0, uses_anonymous_args = 0
+  31              		@ link register save eliminated.
+  75:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   __HAL_RCC_PWR_FORCE_RESET();
+  32              		.loc 1 75 3 view .LVU1
+  33 0000 054B     		ldr	r3, .L2
+  34 0002 D96A     		ldr	r1, [r3, #44]
+  35 0004 8022     		movs	r2, #128
+  36 0006 5205     		lsls	r2, r2, #21
+  37 0008 0A43     		orrs	r2, r1
+  38 000a DA62     		str	r2, [r3, #44]
+  76:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   __HAL_RCC_PWR_RELEASE_RESET();
+  39              		.loc 1 76 3 view .LVU2
+ARM GAS  /tmp/ccwsLkcC.s 			page 3
+
+
+  40 000c DA6A     		ldr	r2, [r3, #44]
+  41 000e 0349     		ldr	r1, .L2+4
+  42 0010 0A40     		ands	r2, r1
+  43 0012 DA62     		str	r2, [r3, #44]
+  77:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** }
+  44              		.loc 1 77 1 is_stmt 0 view .LVU3
+  45              		@ sp needed
+  46 0014 7047     		bx	lr
+  47              	.L3:
+  48 0016 C046     		.align	2
+  49              	.L2:
+  50 0018 00100240 		.word	1073876992
+  51 001c FFFFFFEF 		.word	-268435457
+  52              		.cfi_endproc
+  53              	.LFE327:
+  55              		.section	.text.HAL_PWR_EnableBkUpAccess,"ax",%progbits
+  56              		.align	1
+  57              		.global	HAL_PWR_EnableBkUpAccess
+  58              		.syntax unified
+  59              		.code	16
+  60              		.thumb_func
+  62              	HAL_PWR_EnableBkUpAccess:
+  63              	.LFB328:
+  78:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** 
+  79:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** /**
+  80:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @}
+  81:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   */
+  82:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** 
+  83:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** /** @addtogroup PWR_Exported_Functions_Group2  Peripheral Control functions
+  84:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *  @brief Low Power modes configuration functions
+  85:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *
+  86:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** @verbatim
+  87:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** 
+  88:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****  ===============================================================================
+  89:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****                  ##### Peripheral Control functions #####
+  90:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****  ===============================================================================
+  91:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** 
+  92:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****     [..]
+  93:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****     *** WakeUp pin configuration ***
+  94:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****     ================================
+  95:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****     [..]
+  96:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****       (+) WakeUp pins are used to wakeup the system from Standby mode or
+  97:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****           Shutdown mode. WakeUp pins polarity can be set to configure event
+  98:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****           detection on high level (rising edge) or low level (falling edge).
+  99:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** 
+ 100:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****     *** Low Power mode configuration ***
+ 101:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****     =====================================
+ 102:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****     [..]
+ 103:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****       The devices feature 7 low-power modes:
+ 104:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****       (+) Low-power run mode: core and peripherals are running at low frequency.
+ 105:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****           Regulator is in low power mode.
+ 106:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****       (+) Sleep mode: Cortex-M0+ core stopped, peripherals kept running,
+ 107:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****           regulator is main mode.
+ 108:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****       (+) Low-power Sleep mode: Cortex-M0+ core stopped, peripherals kept running
+ 109:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****           and regulator in low power mode.
+ 110:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****       (+) Stop 0 mode: all clocks are stopped except LSI and LSE, regulator is
+ 111:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****            main mode.
+ARM GAS  /tmp/ccwsLkcC.s 			page 4
+
+
+ 112:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****       (+) Stop 1 mode: all clocks are stopped except LSI and LSE, main regulator
+ 113:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****           off, low power regulator on.
+ 114:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****       (+) Standby mode: all clocks are stopped except LSI and LSE, regulator is
+ 115:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****           disable.
+ 116:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****       (+) Shutdown mode: all clocks are stopped except LSE, regulator is
+ 117:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****           disable.
+ 118:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** 
+ 119:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****    *** Low-power run mode ***
+ 120:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****    ==========================
+ 121:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****     [..]
+ 122:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****       (+) Entry: (from main run mode)
+ 123:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****           (++) set LPR bit with HAL_PWREx_EnableLowPowerRunMode() API after
+ 124:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****                having decreased the system clock below 2 MHz.
+ 125:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****       (+) Exit:
+ 126:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****           (++) clear LPR bit then wait for REGLPF bit to be reset with
+ 127:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****                HAL_PWREx_DisableLowPowerRunMode() API. Only then can the
+ 128:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****                system clock frequency be increased above 2 MHz.
+ 129:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** 
+ 130:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****    *** Sleep mode / Low-power sleep mode ***
+ 131:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****    =========================================
+ 132:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****     [..]
+ 133:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****       (+) Entry:
+ 134:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****           The Sleep & Low-power Sleep modes are entered through
+ 135:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****           HAL_PWR_EnterSLEEPMode() API specifying whether or not the regulator
+ 136:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****           is forced to low-power mode and if exit is interrupt or event
+ 137:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****           triggered.
+ 138:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****           (++) PWR_MAINREGULATOR_ON: Sleep mode (regulator in main mode).
+ 139:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****           (++) PWR_LOWPOWERREGULATOR_ON: Low-power Sleep mode (regulator in low
+ 140:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****                power mode). In this case, the system clock frequency must have
+ 141:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****                been decreased below 2 MHz beforehand.
+ 142:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****           (++) PWR_SLEEPENTRY_WFI: Core enters sleep mode with WFI instruction
+ 143:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****           (++) PWR_SLEEPENTRY_WFE: Core enters sleep mode with WFE instruction
+ 144:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****       (+) WFI Exit:
+ 145:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****         (++) Any interrupt enabled in nested vectored interrupt controller (NVIC)
+ 146:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****       (+) WFE Exit:
+ 147:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****         (++) Any wakeup event if cortex is configured with SEVONPEND = 0
+ 148:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****         (++) Interrupt even when disabled in NVIC if cortex is configured with
+ 149:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****              SEVONPEND = 1
+ 150:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****     [..]  When exiting the Low-power Sleep mode by issuing an interrupt or a wakeup event,
+ 151:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****           the MCU is in Low-power Run mode.
+ 152:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** 
+ 153:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****    *** Stop 0 & Stop 1 modes ***
+ 154:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****    =============================
+ 155:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****     [..]
+ 156:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****       (+) Entry:
+ 157:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****           The Stop modes are entered through the following APIs:
+ 158:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****           (++) HAL_PWR_EnterSTOPMode() with following settings:
+ 159:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****               (+++) PWR_MAINREGULATOR_ON to enter STOP0 mode.
+ 160:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****               (+++) PWR_LOWPOWERREGULATOR_ON to enter STOP1 mode.
+ 161:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****       (+) Exit (interrupt or event-triggered, specified when entering STOP mode):
+ 162:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****           (++) PWR_STOPENTRY_WFI: enter Stop mode with WFI instruction
+ 163:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****           (++) PWR_STOPENTRY_WFE: enter Stop mode with WFE instruction
+ 164:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****       (+) WFI Exit:
+ 165:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****           (++) Any EXTI line (internal or external) configured in interrupt mode
+ 166:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****                with corresponding interrupt enable in NVIC
+ 167:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****       (+) WFE Exit:
+ 168:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****           (++) Any EXTI line (internal or external) configured in event mode if
+ARM GAS  /tmp/ccwsLkcC.s 			page 5
+
+
+ 169:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****                cortex is configured with SEVONPEND = 0
+ 170:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****           (++) Any EXTI line configured in interrupt mode (even if the
+ 171:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****                corresponding EXTI Interrupt vector is disabled in the NVIC) if
+ 172:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****                cortex is configured with SEVONPEND = 0. The interrupt source can
+ 173:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****                be external interrupts or peripherals with wakeup capability.
+ 174:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****     [..]  When exiting Stop, the MCU is either in Run mode or in Low-power Run mode
+ 175:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****           depending on the LPR bit setting.
+ 176:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** 
+ 177:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****    *** Standby mode ***
+ 178:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****    ====================
+ 179:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****     [..] In Standby mode, it is possible to keep backup SRAM content (defined as
+ 180:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****          full SRAM) keeping low power regulator on. This is achievable by setting
+ 181:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****          Ram retention bit calling HAL_PWREx_EnableSRAMRetention API. This increases
+ 182:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****          power consumption.
+ 183:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****          Its also possible to define I/O states using APIs:
+ 184:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****          HAL_PWREx_EnableGPIOPullUp, HAL_PWREx_EnableGPIOPullDown &
+ 185:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****          HAL_PWREx_EnablePullUpPullDownConfig
+ 186:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****       (+) Entry:
+ 187:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****           (++) The Standby mode is entered through HAL_PWR_EnterSTANDBYMode() API, by
+ 188:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****                setting SLEEPDEEP in Cortex control register.
+ 189:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****       (+) Exit:
+ 190:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****           (++) WKUP pin edge detection, RTC event (wakeup, alarm, timestamp),
+ 191:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****                tamper event (internal & external), LSE CSS detection, reset on
+ 192:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****                NRST pin, IWDG reset & BOR reset.
+ 193:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****     [..] Exiting Standby generates a power reset: Cortex is reset and execute
+ 194:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****          Reset handler vector, all registers in the Vcore domain are set to
+ 195:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****          their reset value. Registers outside the VCORE domain (RTC, WKUP, IWDG,
+ 196:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****          and Standby/Shutdown modes control) are not impacted.
+ 197:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** 
+ 198:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****     *** Shutdown mode ***
+ 199:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****    ======================
+ 200:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****     [..]
+ 201:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****       In Shutdown mode,
+ 202:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****         voltage regulator is disabled, all clocks are off except LSE, RRS bit is
+ 203:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****         cleared. SRAM and registers contents are lost except for backup domain
+ 204:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****         registers.
+ 205:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****       (+) Entry:
+ 206:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****           (++) The Shutdown mode is entered through HAL_PWREx_EnterSHUTDOWNMode() API,
+ 207:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****                by setting SLEEPDEEP in Cortex control register.
+ 208:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****       (+) Exit:
+ 209:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****           (++) WKUP pin edge detection, RTC event (wakeup, alarm, timestamp),
+ 210:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****                tamper event (internal & external), LSE CSS detection, reset on
+ 211:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****                NRST pin.
+ 212:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****     [..] Exiting Shutdown generates a brown out reset: Cortex is reset and execute
+ 213:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****          Reset handler vector, all registers are set to their reset value but ones
+ 214:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****          in backup domain.
+ 215:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** 
+ 216:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** @endverbatim
+ 217:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @{
+ 218:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   */
+ 219:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** 
+ 220:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** /**
+ 221:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @brief  Enable access to the backup domain
+ 222:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *         (RTC & TAMP registers, backup registers, RCC BDCR register).
+ 223:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @note   After reset, the backup domain is protected against
+ 224:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *         possible unwanted write accesses. All RTC & TAMP registers (backup
+ 225:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *         registers included) and RCC BDCR register are concerned.
+ARM GAS  /tmp/ccwsLkcC.s 			page 6
+
+
+ 226:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @retval None
+ 227:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   */
+ 228:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** void HAL_PWR_EnableBkUpAccess(void)
+ 229:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** {
+  64              		.loc 1 229 1 is_stmt 1 view -0
+  65              		.cfi_startproc
+  66              		@ args = 0, pretend = 0, frame = 0
+  67              		@ frame_needed = 0, uses_anonymous_args = 0
+  68              		@ link register save eliminated.
+ 230:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   SET_BIT(PWR->CR1, PWR_CR1_DBP);
+  69              		.loc 1 230 3 view .LVU5
+  70 0000 034A     		ldr	r2, .L5
+  71 0002 1168     		ldr	r1, [r2]
+  72 0004 8023     		movs	r3, #128
+  73 0006 5B00     		lsls	r3, r3, #1
+  74 0008 0B43     		orrs	r3, r1
+  75 000a 1360     		str	r3, [r2]
+ 231:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** }
+  76              		.loc 1 231 1 is_stmt 0 view .LVU6
+  77              		@ sp needed
+  78 000c 7047     		bx	lr
+  79              	.L6:
+  80 000e C046     		.align	2
+  81              	.L5:
+  82 0010 00700040 		.word	1073770496
+  83              		.cfi_endproc
+  84              	.LFE328:
+  86              		.section	.text.HAL_PWR_DisableBkUpAccess,"ax",%progbits
+  87              		.align	1
+  88              		.global	HAL_PWR_DisableBkUpAccess
+  89              		.syntax unified
+  90              		.code	16
+  91              		.thumb_func
+  93              	HAL_PWR_DisableBkUpAccess:
+  94              	.LFB329:
+ 232:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** 
+ 233:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** 
+ 234:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** /**
+ 235:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @brief  Disable access to the backup domain
+ 236:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @retval None
+ 237:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   */
+ 238:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** void HAL_PWR_DisableBkUpAccess(void)
+ 239:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** {
+  95              		.loc 1 239 1 is_stmt 1 view -0
+  96              		.cfi_startproc
+  97              		@ args = 0, pretend = 0, frame = 0
+  98              		@ frame_needed = 0, uses_anonymous_args = 0
+  99              		@ link register save eliminated.
+ 240:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   CLEAR_BIT(PWR->CR1, PWR_CR1_DBP);
+ 100              		.loc 1 240 3 view .LVU8
+ 101 0000 024A     		ldr	r2, .L8
+ 102 0002 1368     		ldr	r3, [r2]
+ 103 0004 0249     		ldr	r1, .L8+4
+ 104 0006 0B40     		ands	r3, r1
+ 105 0008 1360     		str	r3, [r2]
+ 241:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** }
+ 106              		.loc 1 241 1 is_stmt 0 view .LVU9
+ARM GAS  /tmp/ccwsLkcC.s 			page 7
+
+
+ 107              		@ sp needed
+ 108 000a 7047     		bx	lr
+ 109              	.L9:
+ 110              		.align	2
+ 111              	.L8:
+ 112 000c 00700040 		.word	1073770496
+ 113 0010 FFFEFFFF 		.word	-257
+ 114              		.cfi_endproc
+ 115              	.LFE329:
+ 117              		.section	.rodata.HAL_PWR_EnableWakeUpPin.str1.4,"aMS",%progbits,1
+ 118              		.align	2
+ 119              	.LC0:
+ 120 0000 44726976 		.ascii	"Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr."
+ 120      6572732F 
+ 120      53544D33 
+ 120      32473078 
+ 120      785F4841 
+ 121 0033 6300     		.ascii	"c\000"
+ 122              		.section	.text.HAL_PWR_EnableWakeUpPin,"ax",%progbits
+ 123              		.align	1
+ 124              		.global	HAL_PWR_EnableWakeUpPin
+ 125              		.syntax unified
+ 126              		.code	16
+ 127              		.thumb_func
+ 129              	HAL_PWR_EnableWakeUpPin:
+ 130              	.LVL0:
+ 131              	.LFB330:
+ 242:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** 
+ 243:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** /**
+ 244:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @brief  Enable the WakeUp PINx functionality.
+ 245:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @param  WakeUpPinPolarity Specifies which Wake-Up pin to enable.
+ 246:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *         This parameter can be one of the following legacy values which set
+ 247:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *         the default polarity i.e. detection on high level (rising edge):
+ 248:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *           @arg @ref PWR_WAKEUP_PIN1, PWR_WAKEUP_PIN2, PWR_WAKEUP_PIN3(*),
+ 249:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *                     PWR_WAKEUP_PIN4, PWR_WAKEUP_PIN5(*),PWR_WAKEUP_PIN6
+ 250:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *         or one of the following value where the user can explicitly specify
+ 251:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *         the enabled pin and the chosen polarity:
+ 252:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *           @arg @ref PWR_WAKEUP_PIN1_HIGH or PWR_WAKEUP_PIN1_LOW
+ 253:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *           @arg @ref PWR_WAKEUP_PIN2_HIGH or PWR_WAKEUP_PIN2_LOW
+ 254:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *           @arg @ref PWR_WAKEUP_PIN3_HIGH or PWR_WAKEUP_PIN3_LOW (*)
+ 255:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *           @arg @ref PWR_WAKEUP_PIN4_HIGH or PWR_WAKEUP_PIN4_LOW
+ 256:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *           @arg @ref PWR_WAKEUP_PIN5_HIGH or PWR_WAKEUP_PIN5_LOW (*)
+ 257:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *           @arg @ref PWR_WAKEUP_PIN6_HIGH or PWR_WAKEUP_PIN6_LOW
+ 258:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @note  PWR_WAKEUP_PINx and PWR_WAKEUP_PINx_HIGH are equivalent.
+ 259:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @note (*) availability depends on devices
+ 260:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @retval None
+ 261:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   */
+ 262:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** void HAL_PWR_EnableWakeUpPin(uint32_t WakeUpPinPolarity)
+ 263:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** {
+ 132              		.loc 1 263 1 is_stmt 1 view -0
+ 133              		.cfi_startproc
+ 134              		@ args = 0, pretend = 0, frame = 0
+ 135              		@ frame_needed = 0, uses_anonymous_args = 0
+ 136              		.loc 1 263 1 is_stmt 0 view .LVU11
+ 137 0000 10B5     		push	{r4, lr}
+ 138              	.LCFI0:
+ 139              		.cfi_def_cfa_offset 8
+ARM GAS  /tmp/ccwsLkcC.s 			page 8
+
+
+ 140              		.cfi_offset 4, -8
+ 141              		.cfi_offset 14, -4
+ 142 0002 0400     		movs	r4, r0
+ 264:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   assert_param(IS_PWR_WAKEUP_PIN(WakeUpPinPolarity));
+ 143              		.loc 1 264 3 is_stmt 1 view .LVU12
+ 144 0004 0B4B     		ldr	r3, .L13
+ 145 0006 1842     		tst	r0, r3
+ 146 0008 02D0     		beq	.L11
+ 147              		.loc 1 264 3 is_stmt 0 discriminator 2 view .LVU13
+ 148 000a 0B4B     		ldr	r3, .L13+4
+ 149 000c 1842     		tst	r0, r3
+ 150 000e 04D0     		beq	.L12
+ 151              	.L11:
+ 152              		.loc 1 264 3 discriminator 3 view .LVU14
+ 153 0010 8421     		movs	r1, #132
+ 154 0012 4900     		lsls	r1, r1, #1
+ 155 0014 0948     		ldr	r0, .L13+8
+ 156              	.LVL1:
+ 157              		.loc 1 264 3 discriminator 3 view .LVU15
+ 158 0016 FFF7FEFF 		bl	assert_failed
+ 159              	.LVL2:
+ 160              	.L12:
+ 265:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** 
+ 266:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   /* Specifies the Wake-Up pin polarity for the event detection
+ 267:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****     (rising or falling edge) */
+ 268:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   MODIFY_REG(PWR->CR4, (PWR_CR4_WP & WakeUpPinPolarity), (WakeUpPinPolarity >> PWR_WUP_POLARITY_SHI
+ 161              		.loc 1 268 3 is_stmt 1 view .LVU16
+ 162 001a 094A     		ldr	r2, .L13+12
+ 163 001c D068     		ldr	r0, [r2, #12]
+ 164 001e 3B23     		movs	r3, #59
+ 165 0020 2340     		ands	r3, r4
+ 166 0022 9843     		bics	r0, r3
+ 167 0024 240A     		lsrs	r4, r4, #8
+ 168              	.LVL3:
+ 169              		.loc 1 268 3 is_stmt 0 view .LVU17
+ 170 0026 0443     		orrs	r4, r0
+ 171 0028 D460     		str	r4, [r2, #12]
+ 269:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** 
+ 270:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   /* Enable wake-up pin */
+ 271:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   SET_BIT(PWR->CR3, (PWR_CR3_EWUP & WakeUpPinPolarity));
+ 172              		.loc 1 271 3 is_stmt 1 view .LVU18
+ 173 002a 9168     		ldr	r1, [r2, #8]
+ 174 002c 0B43     		orrs	r3, r1
+ 175 002e 9360     		str	r3, [r2, #8]
+ 272:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** }
+ 176              		.loc 1 272 1 is_stmt 0 view .LVU19
+ 177              		@ sp needed
+ 178 0030 10BD     		pop	{r4, pc}
+ 179              	.L14:
+ 180 0032 C046     		.align	2
+ 181              	.L13:
+ 182 0034 3B3B0000 		.word	15163
+ 183 0038 C4C4FFFF 		.word	-15164
+ 184 003c 00000000 		.word	.LC0
+ 185 0040 00700040 		.word	1073770496
+ 186              		.cfi_endproc
+ 187              	.LFE330:
+ARM GAS  /tmp/ccwsLkcC.s 			page 9
+
+
+ 189              		.section	.text.HAL_PWR_DisableWakeUpPin,"ax",%progbits
+ 190              		.align	1
+ 191              		.global	HAL_PWR_DisableWakeUpPin
+ 192              		.syntax unified
+ 193              		.code	16
+ 194              		.thumb_func
+ 196              	HAL_PWR_DisableWakeUpPin:
+ 197              	.LVL4:
+ 198              	.LFB331:
+ 273:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** 
+ 274:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** 
+ 275:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** /**
+ 276:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @brief  Disable the WakeUp PINx functionality.
+ 277:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @param  WakeUpPinx Specifies the Power Wake-Up pin to disable.
+ 278:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *         This parameter can be one of the following values:
+ 279:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *           @arg @ref PWR_WAKEUP_PIN1, PWR_WAKEUP_PIN2,PWR_WAKEUP_PIN3(*),
+ 280:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *                     PWR_WAKEUP_PIN4,PWR_WAKEUP_PIN5(*),PWR_WAKEUP_PIN6
+ 281:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @note (*) availability depends on devices
+ 282:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @retval None
+ 283:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   */
+ 284:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** void HAL_PWR_DisableWakeUpPin(uint32_t WakeUpPinx)
+ 285:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** {
+ 199              		.loc 1 285 1 is_stmt 1 view -0
+ 200              		.cfi_startproc
+ 201              		@ args = 0, pretend = 0, frame = 0
+ 202              		@ frame_needed = 0, uses_anonymous_args = 0
+ 203              		.loc 1 285 1 is_stmt 0 view .LVU21
+ 204 0000 10B5     		push	{r4, lr}
+ 205              	.LCFI1:
+ 206              		.cfi_def_cfa_offset 8
+ 207              		.cfi_offset 4, -8
+ 208              		.cfi_offset 14, -4
+ 209 0002 0400     		movs	r4, r0
+ 286:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   assert_param(IS_PWR_WAKEUP_PIN(WakeUpPinx));
+ 210              		.loc 1 286 3 is_stmt 1 view .LVU22
+ 211 0004 084B     		ldr	r3, .L18
+ 212 0006 1842     		tst	r0, r3
+ 213 0008 02D0     		beq	.L16
+ 214              		.loc 1 286 3 is_stmt 0 discriminator 2 view .LVU23
+ 215 000a 084B     		ldr	r3, .L18+4
+ 216 000c 1842     		tst	r0, r3
+ 217 000e 04D0     		beq	.L17
+ 218              	.L16:
+ 219              		.loc 1 286 3 discriminator 3 view .LVU24
+ 220 0010 8F21     		movs	r1, #143
+ 221 0012 4900     		lsls	r1, r1, #1
+ 222 0014 0648     		ldr	r0, .L18+8
+ 223              	.LVL5:
+ 224              		.loc 1 286 3 discriminator 3 view .LVU25
+ 225 0016 FFF7FEFF 		bl	assert_failed
+ 226              	.LVL6:
+ 227              	.L17:
+ 287:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** 
+ 288:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   CLEAR_BIT(PWR->CR3, (PWR_CR3_EWUP & WakeUpPinx));
+ 228              		.loc 1 288 3 is_stmt 1 view .LVU26
+ 229 001a 064A     		ldr	r2, .L18+12
+ 230 001c 9368     		ldr	r3, [r2, #8]
+ARM GAS  /tmp/ccwsLkcC.s 			page 10
+
+
+ 231 001e 3B20     		movs	r0, #59
+ 232 0020 0440     		ands	r4, r0
+ 233              	.LVL7:
+ 234              		.loc 1 288 3 is_stmt 0 view .LVU27
+ 235 0022 A343     		bics	r3, r4
+ 236 0024 9360     		str	r3, [r2, #8]
+ 289:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** }
+ 237              		.loc 1 289 1 view .LVU28
+ 238              		@ sp needed
+ 239 0026 10BD     		pop	{r4, pc}
+ 240              	.L19:
+ 241              		.align	2
+ 242              	.L18:
+ 243 0028 3B3B0000 		.word	15163
+ 244 002c C4C4FFFF 		.word	-15164
+ 245 0030 00000000 		.word	.LC0
+ 246 0034 00700040 		.word	1073770496
+ 247              		.cfi_endproc
+ 248              	.LFE331:
+ 250              		.section	.text.HAL_PWR_EnterSLEEPMode,"ax",%progbits
+ 251              		.align	1
+ 252              		.global	HAL_PWR_EnterSLEEPMode
+ 253              		.syntax unified
+ 254              		.code	16
+ 255              		.thumb_func
+ 257              	HAL_PWR_EnterSLEEPMode:
+ 258              	.LVL8:
+ 259              	.LFB332:
+ 290:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** 
+ 291:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** 
+ 292:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** /**
+ 293:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @brief  Enter Sleep or Low-power Sleep mode.
+ 294:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @note   In Sleep/Low-power Sleep mode, all I/O pins keep the same state as
+ 295:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *         in Run mode.
+ 296:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @param  Regulator Specifies the regulator state in Sleep/Low-power Sleep
+ 297:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *         mode. This parameter can be one of the following values:
+ 298:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *           @arg @ref PWR_MAINREGULATOR_ON Sleep mode (regulator in main mode)
+ 299:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *           @arg @ref PWR_LOWPOWERREGULATOR_ON Low-power Sleep mode (regulator
+ 300:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *                     in low-power mode)
+ 301:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @note   Low-power Sleep mode is entered from Low-power Run mode only. In
+ 302:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *         case Regulator parameter is set to Low Power but MCU is in Run mode,
+ 303:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *         we will first enter in Low-power Run mode. Therefore, user should
+ 304:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *         take care that HCLK frequency is less than 2 MHz.
+ 305:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @note   When exiting Low-power Sleep mode, the MCU is in Low-power Run mode.
+ 306:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *         To switch back to Run mode, user must call
+ 307:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *         HAL_PWREx_DisableLowPowerRunMode() API.
+ 308:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @param  SLEEPEntry Specifies if Sleep mode is entered with WFI or WFE
+ 309:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *         instruction. This parameter can be one of the following values:
+ 310:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *           @arg @ref PWR_SLEEPENTRY_WFI enter Sleep or Low-power Sleep
+ 311:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *                     mode with WFI instruction
+ 312:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *           @arg @ref PWR_SLEEPENTRY_WFE enter Sleep or Low-power Sleep
+ 313:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *                     mode with WFE instruction
+ 314:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @note   When WFI entry is used, tick interrupt have to be disabled if not
+ 315:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *         desired as the interrupt wake up source.
+ 316:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @retval None
+ 317:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   */
+ 318:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** void HAL_PWR_EnterSLEEPMode(uint32_t Regulator, uint8_t SLEEPEntry)
+ARM GAS  /tmp/ccwsLkcC.s 			page 11
+
+
+ 319:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** {
+ 260              		.loc 1 319 1 is_stmt 1 view -0
+ 261              		.cfi_startproc
+ 262              		@ args = 0, pretend = 0, frame = 0
+ 263              		@ frame_needed = 0, uses_anonymous_args = 0
+ 264              		.loc 1 319 1 is_stmt 0 view .LVU30
+ 265 0000 70B5     		push	{r4, r5, r6, lr}
+ 266              	.LCFI2:
+ 267              		.cfi_def_cfa_offset 16
+ 268              		.cfi_offset 4, -16
+ 269              		.cfi_offset 5, -12
+ 270              		.cfi_offset 6, -8
+ 271              		.cfi_offset 14, -4
+ 272 0002 0400     		movs	r4, r0
+ 273 0004 0D00     		movs	r5, r1
+ 320:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   /* Check the parameters */
+ 321:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   assert_param(IS_PWR_REGULATOR(Regulator));
+ 274              		.loc 1 321 3 is_stmt 1 view .LVU31
+ 275 0006 0028     		cmp	r0, #0
+ 276 0008 03D0     		beq	.L21
+ 277              		.loc 1 321 3 is_stmt 0 discriminator 1 view .LVU32
+ 278 000a 8023     		movs	r3, #128
+ 279 000c DB01     		lsls	r3, r3, #7
+ 280 000e 9842     		cmp	r0, r3
+ 281 0010 14D1     		bne	.L27
+ 282              	.LVL9:
+ 283              	.L21:
+ 322:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   assert_param(IS_PWR_SLEEP_ENTRY(SLEEPEntry));
+ 284              		.loc 1 322 3 is_stmt 1 view .LVU33
+ 285 0012 6B1E     		subs	r3, r5, #1
+ 286 0014 DBB2     		uxtb	r3, r3
+ 287 0016 012B     		cmp	r3, #1
+ 288 0018 16D8     		bhi	.L28
+ 289              	.L22:
+ 323:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** 
+ 324:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   /* Set Regulator parameter */
+ 325:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   if (Regulator != PWR_MAINREGULATOR_ON)
+ 290              		.loc 1 325 3 view .LVU34
+ 291              		.loc 1 325 6 is_stmt 0 view .LVU35
+ 292 001a 002C     		cmp	r4, #0
+ 293 001c 1DD0     		beq	.L23
+ 326:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   {
+ 327:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****     /* If in run mode, first move to low-power run mode.
+ 328:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****        The system clock frequency must be below 2 MHz at this point. */
+ 329:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****     if ((PWR->SR2 & PWR_SR2_REGLPF) == 0x00u)
+ 294              		.loc 1 329 5 is_stmt 1 view .LVU36
+ 295              		.loc 1 329 13 is_stmt 0 view .LVU37
+ 296 001e 144B     		ldr	r3, .L31
+ 297 0020 5B69     		ldr	r3, [r3, #20]
+ 298              		.loc 1 329 8 view .LVU38
+ 299 0022 9B05     		lsls	r3, r3, #22
+ 300 0024 16D5     		bpl	.L29
+ 301              	.L24:
+ 330:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****     {
+ 331:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****       HAL_PWREx_EnableLowPowerRunMode();
+ 332:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****     }
+ 333:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   }
+ARM GAS  /tmp/ccwsLkcC.s 			page 12
+
+
+ 334:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   else
+ 335:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   {
+ 336:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****     /* If in low-power run mode at this point, exit it */
+ 337:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****     if ((PWR->SR2 & PWR_SR2_REGLPF) != 0x00u)
+ 338:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****     {
+ 339:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****       if (HAL_PWREx_DisableLowPowerRunMode() != HAL_OK)
+ 340:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****       {
+ 341:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****         return ;
+ 342:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****       }
+ 343:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****     }
+ 344:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   }
+ 345:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** 
+ 346:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   /* Clear SLEEPDEEP bit of Cortex System Control Register */
+ 347:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   CLEAR_BIT(SCB->SCR, ((uint32_t)SCB_SCR_SLEEPDEEP_Msk));
+ 302              		.loc 1 347 3 is_stmt 1 view .LVU39
+ 303 0026 134A     		ldr	r2, .L31+4
+ 304 0028 1369     		ldr	r3, [r2, #16]
+ 305 002a 0421     		movs	r1, #4
+ 306 002c 8B43     		bics	r3, r1
+ 307 002e 1361     		str	r3, [r2, #16]
+ 348:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** 
+ 349:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   /* Select SLEEP mode entry -------------------------------------------------*/
+ 350:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   if (SLEEPEntry == PWR_SLEEPENTRY_WFI)
+ 308              		.loc 1 350 3 view .LVU40
+ 309              		.loc 1 350 6 is_stmt 0 view .LVU41
+ 310 0030 012D     		cmp	r5, #1
+ 311 0032 1BD0     		beq	.L30
+ 351:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   {
+ 352:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****     /* Request Wait For Interrupt */
+ 353:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****     __WFI();
+ 354:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   }
+ 355:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   else
+ 356:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   {
+ 357:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****     /* Request Wait For Event */
+ 358:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****     __SEV();
+ 312              		.loc 1 358 5 is_stmt 1 view .LVU42
+ 313              		.syntax divided
+ 314              	@ 358 "Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c" 1
+ 315 0034 40BF     		sev
+ 316              	@ 0 "" 2
+ 359:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****     __WFE();
+ 317              		.loc 1 359 5 view .LVU43
+ 318              	@ 359 "Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c" 1
+ 319 0036 20BF     		wfe
+ 320              	@ 0 "" 2
+ 360:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****     __WFE();
+ 321              		.loc 1 360 5 view .LVU44
+ 322              	@ 360 "Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c" 1
+ 323 0038 20BF     		wfe
+ 324              	@ 0 "" 2
+ 325              		.thumb
+ 326              		.syntax unified
+ 327              	.L20:
+ 361:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   }
+ 362:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** }
+ 328              		.loc 1 362 1 is_stmt 0 view .LVU45
+ 329              		@ sp needed
+ARM GAS  /tmp/ccwsLkcC.s 			page 13
+
+
+ 330              	.LVL10:
+ 331              		.loc 1 362 1 view .LVU46
+ 332 003a 70BD     		pop	{r4, r5, r6, pc}
+ 333              	.LVL11:
+ 334              	.L27:
+ 321:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   assert_param(IS_PWR_SLEEP_ENTRY(SLEEPEntry));
+ 335              		.loc 1 321 3 discriminator 2 view .LVU47
+ 336 003c 4221     		movs	r1, #66
+ 337              	.LVL12:
+ 321:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   assert_param(IS_PWR_SLEEP_ENTRY(SLEEPEntry));
+ 338              		.loc 1 321 3 discriminator 2 view .LVU48
+ 339 003e FF31     		adds	r1, r1, #255
+ 340 0040 0D48     		ldr	r0, .L31+8
+ 341              	.LVL13:
+ 321:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   assert_param(IS_PWR_SLEEP_ENTRY(SLEEPEntry));
+ 342              		.loc 1 321 3 discriminator 2 view .LVU49
+ 343 0042 FFF7FEFF 		bl	assert_failed
+ 344              	.LVL14:
+ 345 0046 E4E7     		b	.L21
+ 346              	.L28:
+ 322:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** 
+ 347              		.loc 1 322 3 discriminator 1 view .LVU50
+ 348 0048 A121     		movs	r1, #161
+ 349 004a 4900     		lsls	r1, r1, #1
+ 350 004c 0A48     		ldr	r0, .L31+8
+ 351 004e FFF7FEFF 		bl	assert_failed
+ 352              	.LVL15:
+ 353 0052 E2E7     		b	.L22
+ 354              	.L29:
+ 331:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****     }
+ 355              		.loc 1 331 7 is_stmt 1 view .LVU51
+ 356 0054 FFF7FEFF 		bl	HAL_PWREx_EnableLowPowerRunMode
+ 357              	.LVL16:
+ 358 0058 E5E7     		b	.L24
+ 359              	.L23:
+ 337:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****     {
+ 360              		.loc 1 337 5 view .LVU52
+ 337:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****     {
+ 361              		.loc 1 337 13 is_stmt 0 view .LVU53
+ 362 005a 054B     		ldr	r3, .L31
+ 363 005c 5B69     		ldr	r3, [r3, #20]
+ 337:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****     {
+ 364              		.loc 1 337 8 view .LVU54
+ 365 005e 9B05     		lsls	r3, r3, #22
+ 366 0060 E1D5     		bpl	.L24
+ 339:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****       {
+ 367              		.loc 1 339 7 is_stmt 1 view .LVU55
+ 339:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****       {
+ 368              		.loc 1 339 11 is_stmt 0 view .LVU56
+ 369 0062 FFF7FEFF 		bl	HAL_PWREx_DisableLowPowerRunMode
+ 370              	.LVL17:
+ 339:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****       {
+ 371              		.loc 1 339 10 view .LVU57
+ 372 0066 0028     		cmp	r0, #0
+ 373 0068 DDD0     		beq	.L24
+ 374 006a E6E7     		b	.L20
+ 375              	.L30:
+ARM GAS  /tmp/ccwsLkcC.s 			page 14
+
+
+ 353:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   }
+ 376              		.loc 1 353 5 is_stmt 1 view .LVU58
+ 377              		.syntax divided
+ 378              	@ 353 "Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c" 1
+ 379 006c 30BF     		wfi
+ 380              	@ 0 "" 2
+ 381              		.thumb
+ 382              		.syntax unified
+ 383 006e E4E7     		b	.L20
+ 384              	.L32:
+ 385              		.align	2
+ 386              	.L31:
+ 387 0070 00700040 		.word	1073770496
+ 388 0074 00ED00E0 		.word	-536810240
+ 389 0078 00000000 		.word	.LC0
+ 390              		.cfi_endproc
+ 391              	.LFE332:
+ 393              		.section	.text.HAL_PWR_EnterSTOPMode,"ax",%progbits
+ 394              		.align	1
+ 395              		.global	HAL_PWR_EnterSTOPMode
+ 396              		.syntax unified
+ 397              		.code	16
+ 398              		.thumb_func
+ 400              	HAL_PWR_EnterSTOPMode:
+ 401              	.LVL18:
+ 402              	.LFB333:
+ 363:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** 
+ 364:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** 
+ 365:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** /**
+ 366:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @brief  Enter Stop mode
+ 367:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @note   This API is named HAL_PWR_EnterSTOPMode to ensure compatibility with
+ 368:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *         legacy code running on devices where only "Stop mode" is mentioned
+ 369:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *         with main or low power regulator ON.
+ 370:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @note   In Stop mode, all I/O pins keep the same state as in Run mode.
+ 371:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @note   All clocks in the VCORE domain are stopped; the PLL, the HSI and the
+ 372:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *         HSE oscillators are disabled. Some peripherals with the wakeup
+ 373:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *         capability can switch on the HSI to receive a frame, and switch off
+ 374:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *         the HSI after receiving the frame if it is not a wakeup frame.
+ 375:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *         SRAM and register contents are preserved.
+ 376:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *         The BOR is available.
+ 377:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *         The voltage regulator can be configured either in normal (Stop 0) or
+ 378:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *         low-power mode (Stop 1).
+ 379:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @note   When exiting Stop 0 or Stop 1 mode by issuing an interrupt or a
+ 380:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *         wakeup event, the HSI RC oscillator is selected as system clock
+ 381:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @note   When the voltage regulator operates in low power mode (Stop 1),
+ 382:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *         an additional startup delay is incurred when waking up. By keeping
+ 383:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *         the internal regulator ON during Stop mode (Stop 0), the consumption
+ 384:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *         is higher although the startup time is reduced.
+ 385:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @param  Regulator Specifies the regulator state in Stop mode
+ 386:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *         This parameter can be one of the following values:
+ 387:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *            @arg @ref PWR_MAINREGULATOR_ON  Stop 0 mode (main regulator ON)
+ 388:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *            @arg @ref PWR_LOWPOWERREGULATOR_ON  Stop 1 mode (low power
+ 389:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *                                                regulator ON)
+ 390:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @param  STOPEntry Specifies Stop 0 or Stop 1 mode is entered with WFI or
+ 391:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *         WFE instruction. This parameter can be one of the following values:
+ 392:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *            @arg @ref PWR_STOPENTRY_WFI  Enter Stop 0 or Stop 1 mode with WFI
+ 393:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *                                         instruction.
+ARM GAS  /tmp/ccwsLkcC.s 			page 15
+
+
+ 394:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *            @arg @ref PWR_STOPENTRY_WFE  Enter Stop 0 or Stop 1 mode with WFE
+ 395:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *                                         instruction.
+ 396:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @retval None
+ 397:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   */
+ 398:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** void HAL_PWR_EnterSTOPMode(uint32_t Regulator, uint8_t STOPEntry)
+ 399:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** {
+ 403              		.loc 1 399 1 view -0
+ 404              		.cfi_startproc
+ 405              		@ args = 0, pretend = 0, frame = 0
+ 406              		@ frame_needed = 0, uses_anonymous_args = 0
+ 407              		.loc 1 399 1 is_stmt 0 view .LVU60
+ 408 0000 70B5     		push	{r4, r5, r6, lr}
+ 409              	.LCFI3:
+ 410              		.cfi_def_cfa_offset 16
+ 411              		.cfi_offset 4, -16
+ 412              		.cfi_offset 5, -12
+ 413              		.cfi_offset 6, -8
+ 414              		.cfi_offset 14, -4
+ 415 0002 0400     		movs	r4, r0
+ 416 0004 0D00     		movs	r5, r1
+ 400:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   /* Check the parameters */
+ 401:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   assert_param(IS_PWR_REGULATOR(Regulator));
+ 417              		.loc 1 401 3 is_stmt 1 view .LVU61
+ 418 0006 0028     		cmp	r0, #0
+ 419 0008 03D0     		beq	.L34
+ 420              		.loc 1 401 3 is_stmt 0 discriminator 1 view .LVU62
+ 421 000a 8023     		movs	r3, #128
+ 422 000c DB01     		lsls	r3, r3, #7
+ 423 000e 9842     		cmp	r0, r3
+ 424 0010 1CD1     		bne	.L40
+ 425              	.LVL19:
+ 426              	.L34:
+ 402:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   assert_param(IS_PWR_STOP_ENTRY(STOPEntry));
+ 427              		.loc 1 402 3 is_stmt 1 view .LVU63
+ 428 0012 6B1E     		subs	r3, r5, #1
+ 429 0014 DBB2     		uxtb	r3, r3
+ 430 0016 012B     		cmp	r3, #1
+ 431 0018 1ED8     		bhi	.L41
+ 432              	.L35:
+ 403:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** 
+ 404:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   if (Regulator != PWR_MAINREGULATOR_ON)
+ 433              		.loc 1 404 3 view .LVU64
+ 434              		.loc 1 404 6 is_stmt 0 view .LVU65
+ 435 001a 002C     		cmp	r4, #0
+ 436 001c 22D0     		beq	.L36
+ 405:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   {
+ 406:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****     /* Stop mode with Low-Power Regulator */
+ 407:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****     MODIFY_REG(PWR->CR1, PWR_CR1_LPMS, PWR_LOWPOWERMODE_STOP1);
+ 437              		.loc 1 407 5 is_stmt 1 view .LVU66
+ 438 001e 154A     		ldr	r2, .L43
+ 439 0020 1368     		ldr	r3, [r2]
+ 440 0022 0721     		movs	r1, #7
+ 441 0024 8B43     		bics	r3, r1
+ 442 0026 0639     		subs	r1, r1, #6
+ 443 0028 0B43     		orrs	r3, r1
+ 444 002a 1360     		str	r3, [r2]
+ 445              	.L37:
+ARM GAS  /tmp/ccwsLkcC.s 			page 16
+
+
+ 408:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   }
+ 409:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   else
+ 410:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   {
+ 411:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****     /* Stop mode with Main Regulator */
+ 412:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****     MODIFY_REG(PWR->CR1, PWR_CR1_LPMS, PWR_LOWPOWERMODE_STOP0);
+ 413:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   }
+ 414:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** 
+ 415:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   /* Set SLEEPDEEP bit of Cortex System Control Register */
+ 416:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   SET_BIT(SCB->SCR, ((uint32_t)SCB_SCR_SLEEPDEEP_Msk));
+ 446              		.loc 1 416 3 view .LVU67
+ 447 002c 124A     		ldr	r2, .L43+4
+ 448 002e 1369     		ldr	r3, [r2, #16]
+ 449 0030 0421     		movs	r1, #4
+ 450 0032 0B43     		orrs	r3, r1
+ 451 0034 1361     		str	r3, [r2, #16]
+ 417:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** 
+ 418:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   /* Select Stop mode entry --------------------------------------------------*/
+ 419:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   if (STOPEntry == PWR_STOPENTRY_WFI)
+ 452              		.loc 1 419 3 view .LVU68
+ 453              		.loc 1 419 6 is_stmt 0 view .LVU69
+ 454 0036 012D     		cmp	r5, #1
+ 455 0038 1AD0     		beq	.L42
+ 420:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   {
+ 421:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****     /* Request Wait For Interrupt */
+ 422:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****     __WFI();
+ 423:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   }
+ 424:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   else
+ 425:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   {
+ 426:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****     /* Request Wait For Event */
+ 427:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****     __SEV();
+ 456              		.loc 1 427 5 is_stmt 1 view .LVU70
+ 457              		.syntax divided
+ 458              	@ 427 "Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c" 1
+ 459 003a 40BF     		sev
+ 460              	@ 0 "" 2
+ 428:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****     __WFE();
+ 461              		.loc 1 428 5 view .LVU71
+ 462              	@ 428 "Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c" 1
+ 463 003c 20BF     		wfe
+ 464              	@ 0 "" 2
+ 429:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****     __WFE();
+ 465              		.loc 1 429 5 view .LVU72
+ 466              	@ 429 "Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c" 1
+ 467 003e 20BF     		wfe
+ 468              	@ 0 "" 2
+ 469              		.thumb
+ 470              		.syntax unified
+ 471              	.L39:
+ 430:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   }
+ 431:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** 
+ 432:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   /* Reset SLEEPDEEP bit of Cortex System Control Register */
+ 433:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   CLEAR_BIT(SCB->SCR, ((uint32_t)SCB_SCR_SLEEPDEEP_Msk));
+ 472              		.loc 1 433 3 view .LVU73
+ 473 0040 0D4A     		ldr	r2, .L43+4
+ 474 0042 1369     		ldr	r3, [r2, #16]
+ 475 0044 0421     		movs	r1, #4
+ 476 0046 8B43     		bics	r3, r1
+ARM GAS  /tmp/ccwsLkcC.s 			page 17
+
+
+ 477 0048 1361     		str	r3, [r2, #16]
+ 434:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** }
+ 478              		.loc 1 434 1 is_stmt 0 view .LVU74
+ 479              		@ sp needed
+ 480              	.LVL20:
+ 481              		.loc 1 434 1 view .LVU75
+ 482 004a 70BD     		pop	{r4, r5, r6, pc}
+ 483              	.LVL21:
+ 484              	.L40:
+ 401:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   assert_param(IS_PWR_STOP_ENTRY(STOPEntry));
+ 485              		.loc 1 401 3 discriminator 2 view .LVU76
+ 486 004c 9221     		movs	r1, #146
+ 487              	.LVL22:
+ 401:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   assert_param(IS_PWR_STOP_ENTRY(STOPEntry));
+ 488              		.loc 1 401 3 discriminator 2 view .LVU77
+ 489 004e FF31     		adds	r1, r1, #255
+ 490 0050 0A48     		ldr	r0, .L43+8
+ 491              	.LVL23:
+ 401:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   assert_param(IS_PWR_STOP_ENTRY(STOPEntry));
+ 492              		.loc 1 401 3 discriminator 2 view .LVU78
+ 493 0052 FFF7FEFF 		bl	assert_failed
+ 494              	.LVL24:
+ 495 0056 DCE7     		b	.L34
+ 496              	.L41:
+ 402:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** 
+ 497              		.loc 1 402 3 discriminator 1 view .LVU79
+ 498 0058 C921     		movs	r1, #201
+ 499 005a 4900     		lsls	r1, r1, #1
+ 500 005c 0748     		ldr	r0, .L43+8
+ 501 005e FFF7FEFF 		bl	assert_failed
+ 502              	.LVL25:
+ 503 0062 DAE7     		b	.L35
+ 504              	.L36:
+ 412:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   }
+ 505              		.loc 1 412 5 is_stmt 1 view .LVU80
+ 506 0064 034A     		ldr	r2, .L43
+ 507 0066 1368     		ldr	r3, [r2]
+ 508 0068 0721     		movs	r1, #7
+ 509 006a 8B43     		bics	r3, r1
+ 510 006c 1360     		str	r3, [r2]
+ 511 006e DDE7     		b	.L37
+ 512              	.L42:
+ 422:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   }
+ 513              		.loc 1 422 5 view .LVU81
+ 514              		.syntax divided
+ 515              	@ 422 "Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c" 1
+ 516 0070 30BF     		wfi
+ 517              	@ 0 "" 2
+ 518              		.thumb
+ 519              		.syntax unified
+ 520 0072 E5E7     		b	.L39
+ 521              	.L44:
+ 522              		.align	2
+ 523              	.L43:
+ 524 0074 00700040 		.word	1073770496
+ 525 0078 00ED00E0 		.word	-536810240
+ 526 007c 00000000 		.word	.LC0
+ARM GAS  /tmp/ccwsLkcC.s 			page 18
+
+
+ 527              		.cfi_endproc
+ 528              	.LFE333:
+ 530              		.section	.text.HAL_PWR_EnterSTANDBYMode,"ax",%progbits
+ 531              		.align	1
+ 532              		.global	HAL_PWR_EnterSTANDBYMode
+ 533              		.syntax unified
+ 534              		.code	16
+ 535              		.thumb_func
+ 537              	HAL_PWR_EnterSTANDBYMode:
+ 538              	.LFB334:
+ 435:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** 
+ 436:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** 
+ 437:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** /**
+ 438:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @brief  Enter Standby mode.
+ 439:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @note   In Standby mode, the PLL, the HSI and the HSE oscillators are
+ 440:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *         switched off. The voltage regulator is disabled. SRAM and register
+ 441:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *         contents are lost except for registers in the Backup domain and
+ 442:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *         Standby circuitry. BOR is available.
+ 443:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @note   The I/Os can be configured either with a pull-up or pull-down or can
+ 444:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *         be kept in analog state.
+ 445:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *         HAL_PWREx_EnableGPIOPullUp() and HAL_PWREx_EnableGPIOPullDown()
+ 446:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *         respectively enable Pull Up and PullDown state.
+ 447:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *         HAL_PWREx_DisableGPIOPullUp() & HAL_PWREx_DisableGPIOPullDown()
+ 448:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *         disable the same. These states are effective in Standby mode only if
+ 449:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *         APC bit is set through HAL_PWREx_EnablePullUpPullDownConfig() API.
+ 450:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @note   Sram content can be kept setting RRS through HAL_PWREx_EnableSRAMRetention()
+ 451:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @retval None
+ 452:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   */
+ 453:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** void HAL_PWR_EnterSTANDBYMode(void)
+ 454:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** {
+ 539              		.loc 1 454 1 view -0
+ 540              		.cfi_startproc
+ 541              		@ args = 0, pretend = 0, frame = 0
+ 542              		@ frame_needed = 0, uses_anonymous_args = 0
+ 543              		@ link register save eliminated.
+ 455:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   /* Set Stand-by mode */
+ 456:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   MODIFY_REG(PWR->CR1, PWR_CR1_LPMS, PWR_LOWPOWERMODE_STANDBY);
+ 544              		.loc 1 456 3 view .LVU83
+ 545 0000 064A     		ldr	r2, .L46
+ 546 0002 1368     		ldr	r3, [r2]
+ 547 0004 0721     		movs	r1, #7
+ 548 0006 8B43     		bics	r3, r1
+ 549 0008 0439     		subs	r1, r1, #4
+ 550 000a 0B43     		orrs	r3, r1
+ 551 000c 1360     		str	r3, [r2]
+ 457:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** 
+ 458:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   /* Set SLEEPDEEP bit of Cortex System Control Register */
+ 459:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   SET_BIT(SCB->SCR, ((uint32_t)SCB_SCR_SLEEPDEEP_Msk));
+ 552              		.loc 1 459 3 view .LVU84
+ 553 000e 044A     		ldr	r2, .L46+4
+ 554 0010 1369     		ldr	r3, [r2, #16]
+ 555 0012 0131     		adds	r1, r1, #1
+ 556 0014 0B43     		orrs	r3, r1
+ 557 0016 1361     		str	r3, [r2, #16]
+ 460:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** 
+ 461:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   /* This option is used to ensure that store operations are completed */
+ 462:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** #if defined ( __CC_ARM)
+ARM GAS  /tmp/ccwsLkcC.s 			page 19
+
+
+ 463:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   __force_stores();
+ 464:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** #endif /* __CC_ARM */
+ 465:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** 
+ 466:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   /* Request Wait For Interrupt */
+ 467:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   __WFI();
+ 558              		.loc 1 467 3 view .LVU85
+ 559              		.syntax divided
+ 560              	@ 467 "Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c" 1
+ 561 0018 30BF     		wfi
+ 562              	@ 0 "" 2
+ 468:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** }
+ 563              		.loc 1 468 1 is_stmt 0 view .LVU86
+ 564              		.thumb
+ 565              		.syntax unified
+ 566              		@ sp needed
+ 567 001a 7047     		bx	lr
+ 568              	.L47:
+ 569              		.align	2
+ 570              	.L46:
+ 571 001c 00700040 		.word	1073770496
+ 572 0020 00ED00E0 		.word	-536810240
+ 573              		.cfi_endproc
+ 574              	.LFE334:
+ 576              		.section	.text.HAL_PWR_EnableSleepOnExit,"ax",%progbits
+ 577              		.align	1
+ 578              		.global	HAL_PWR_EnableSleepOnExit
+ 579              		.syntax unified
+ 580              		.code	16
+ 581              		.thumb_func
+ 583              	HAL_PWR_EnableSleepOnExit:
+ 584              	.LFB335:
+ 469:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** 
+ 470:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** 
+ 471:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** /**
+ 472:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @brief  Enable Sleep-On-Exit Cortex feature
+ 473:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @note   Set SLEEPONEXIT bit of SCR register. When this bit is set, the
+ 474:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *         processor enters SLEEP or DEEPSLEEP mode when an interruption
+ 475:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *         handling is over returning to thread mode. Setting this bit is
+ 476:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *         useful when the processor is expected to run only on interruptions
+ 477:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *         handling.
+ 478:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @retval None
+ 479:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   */
+ 480:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** void HAL_PWR_EnableSleepOnExit(void)
+ 481:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** {
+ 585              		.loc 1 481 1 is_stmt 1 view -0
+ 586              		.cfi_startproc
+ 587              		@ args = 0, pretend = 0, frame = 0
+ 588              		@ frame_needed = 0, uses_anonymous_args = 0
+ 589              		@ link register save eliminated.
+ 482:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   /* Set SLEEPONEXIT bit of Cortex System Control Register */
+ 483:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   SET_BIT(SCB->SCR, ((uint32_t)SCB_SCR_SLEEPONEXIT_Msk));
+ 590              		.loc 1 483 3 view .LVU88
+ 591 0000 024A     		ldr	r2, .L49
+ 592 0002 1369     		ldr	r3, [r2, #16]
+ 593 0004 0221     		movs	r1, #2
+ 594 0006 0B43     		orrs	r3, r1
+ 595 0008 1361     		str	r3, [r2, #16]
+ARM GAS  /tmp/ccwsLkcC.s 			page 20
+
+
+ 484:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** }
+ 596              		.loc 1 484 1 is_stmt 0 view .LVU89
+ 597              		@ sp needed
+ 598 000a 7047     		bx	lr
+ 599              	.L50:
+ 600              		.align	2
+ 601              	.L49:
+ 602 000c 00ED00E0 		.word	-536810240
+ 603              		.cfi_endproc
+ 604              	.LFE335:
+ 606              		.section	.text.HAL_PWR_DisableSleepOnExit,"ax",%progbits
+ 607              		.align	1
+ 608              		.global	HAL_PWR_DisableSleepOnExit
+ 609              		.syntax unified
+ 610              		.code	16
+ 611              		.thumb_func
+ 613              	HAL_PWR_DisableSleepOnExit:
+ 614              	.LFB336:
+ 485:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** 
+ 486:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** 
+ 487:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** /**
+ 488:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @brief  Disable Sleep-On-Exit Cortex feature
+ 489:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @note   Clear SLEEPONEXIT bit of SCR register. When this bit is set, the
+ 490:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *         processor enters SLEEP or DEEPSLEEP mode when an interruption
+ 491:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *         handling is over.
+ 492:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @retval None
+ 493:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   */
+ 494:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** void HAL_PWR_DisableSleepOnExit(void)
+ 495:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** {
+ 615              		.loc 1 495 1 is_stmt 1 view -0
+ 616              		.cfi_startproc
+ 617              		@ args = 0, pretend = 0, frame = 0
+ 618              		@ frame_needed = 0, uses_anonymous_args = 0
+ 619              		@ link register save eliminated.
+ 496:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   /* Clear SLEEPONEXIT bit of Cortex System Control Register */
+ 497:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   CLEAR_BIT(SCB->SCR, ((uint32_t)SCB_SCR_SLEEPONEXIT_Msk));
+ 620              		.loc 1 497 3 view .LVU91
+ 621 0000 024A     		ldr	r2, .L52
+ 622 0002 1369     		ldr	r3, [r2, #16]
+ 623 0004 0221     		movs	r1, #2
+ 624 0006 8B43     		bics	r3, r1
+ 625 0008 1361     		str	r3, [r2, #16]
+ 498:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** }
+ 626              		.loc 1 498 1 is_stmt 0 view .LVU92
+ 627              		@ sp needed
+ 628 000a 7047     		bx	lr
+ 629              	.L53:
+ 630              		.align	2
+ 631              	.L52:
+ 632 000c 00ED00E0 		.word	-536810240
+ 633              		.cfi_endproc
+ 634              	.LFE336:
+ 636              		.section	.text.HAL_PWR_EnableSEVOnPend,"ax",%progbits
+ 637              		.align	1
+ 638              		.global	HAL_PWR_EnableSEVOnPend
+ 639              		.syntax unified
+ 640              		.code	16
+ARM GAS  /tmp/ccwsLkcC.s 			page 21
+
+
+ 641              		.thumb_func
+ 643              	HAL_PWR_EnableSEVOnPend:
+ 644              	.LFB337:
+ 499:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** 
+ 500:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** 
+ 501:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** /**
+ 502:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @brief  Enable Cortex Sev On Pending feature.
+ 503:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @note   Set SEVONPEND bit of SCR register. When this bit is set, enabled
+ 504:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *         events and all interrupts, including disabled ones can wakeup
+ 505:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *         processor from WFE.
+ 506:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @retval None
+ 507:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   */
+ 508:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** void HAL_PWR_EnableSEVOnPend(void)
+ 509:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** {
+ 645              		.loc 1 509 1 is_stmt 1 view -0
+ 646              		.cfi_startproc
+ 647              		@ args = 0, pretend = 0, frame = 0
+ 648              		@ frame_needed = 0, uses_anonymous_args = 0
+ 649              		@ link register save eliminated.
+ 510:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   /* Set SEVONPEND bit of Cortex System Control Register */
+ 511:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   SET_BIT(SCB->SCR, ((uint32_t)SCB_SCR_SEVONPEND_Msk));
+ 650              		.loc 1 511 3 view .LVU94
+ 651 0000 024A     		ldr	r2, .L55
+ 652 0002 1369     		ldr	r3, [r2, #16]
+ 653 0004 1021     		movs	r1, #16
+ 654 0006 0B43     		orrs	r3, r1
+ 655 0008 1361     		str	r3, [r2, #16]
+ 512:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** }
+ 656              		.loc 1 512 1 is_stmt 0 view .LVU95
+ 657              		@ sp needed
+ 658 000a 7047     		bx	lr
+ 659              	.L56:
+ 660              		.align	2
+ 661              	.L55:
+ 662 000c 00ED00E0 		.word	-536810240
+ 663              		.cfi_endproc
+ 664              	.LFE337:
+ 666              		.section	.text.HAL_PWR_DisableSEVOnPend,"ax",%progbits
+ 667              		.align	1
+ 668              		.global	HAL_PWR_DisableSEVOnPend
+ 669              		.syntax unified
+ 670              		.code	16
+ 671              		.thumb_func
+ 673              	HAL_PWR_DisableSEVOnPend:
+ 674              	.LFB338:
+ 513:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** 
+ 514:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** 
+ 515:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** /**
+ 516:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @brief  Disable Cortex Sev On Pending feature.
+ 517:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @note   Clear SEVONPEND bit of SCR register. When this bit is clear, only
+ 518:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   *         enable interrupts or events can wakeup processor from WFE
+ 519:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   * @retval None
+ 520:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   */
+ 521:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** void HAL_PWR_DisableSEVOnPend(void)
+ 522:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** {
+ 675              		.loc 1 522 1 is_stmt 1 view -0
+ 676              		.cfi_startproc
+ARM GAS  /tmp/ccwsLkcC.s 			page 22
+
+
+ 677              		@ args = 0, pretend = 0, frame = 0
+ 678              		@ frame_needed = 0, uses_anonymous_args = 0
+ 679              		@ link register save eliminated.
+ 523:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   /* Clear SEVONPEND bit of Cortex System Control Register */
+ 524:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c ****   CLEAR_BIT(SCB->SCR, ((uint32_t)SCB_SCR_SEVONPEND_Msk));
+ 680              		.loc 1 524 3 view .LVU97
+ 681 0000 024A     		ldr	r2, .L58
+ 682 0002 1369     		ldr	r3, [r2, #16]
+ 683 0004 1021     		movs	r1, #16
+ 684 0006 8B43     		bics	r3, r1
+ 685 0008 1361     		str	r3, [r2, #16]
+ 525:Drivers/STM32G0xx_HAL_Driver/Src/stm32g0xx_hal_pwr.c **** }
+ 686              		.loc 1 525 1 is_stmt 0 view .LVU98
+ 687              		@ sp needed
+ 688 000a 7047     		bx	lr
+ 689              	.L59:
+ 690              		.align	2
+ 691              	.L58:
+ 692 000c 00ED00E0 		.word	-536810240
+ 693              		.cfi_endproc
+ 694              	.LFE338:
+ 696              		.text
+ 697              	.Letext0:
+ 698              		.file 2 "/home/yiyu/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/machine/_default_types.h"
+ 699              		.file 3 "/home/yiyu/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/sys/_stdint.h"
+ 700              		.file 4 "Drivers/CMSIS/Include/core_cm0plus.h"
+ 701              		.file 5 "Drivers/CMSIS/Device/ST/STM32G0xx/Include/stm32g071xx.h"
+ 702              		.file 6 "Core/Inc/stm32g0xx_hal_conf.h"
+ 703              		.file 7 "Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_pwr_ex.h"
+ 704              		.file 8 "Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_def.h"
+ 705              		.file 9 "Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_ll_dma.h"
+ARM GAS  /tmp/ccwsLkcC.s 			page 23
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 stm32g0xx_hal_pwr.c
+     /tmp/ccwsLkcC.s:18     .text.HAL_PWR_DeInit:0000000000000000 $t
+     /tmp/ccwsLkcC.s:24     .text.HAL_PWR_DeInit:0000000000000000 HAL_PWR_DeInit
+     /tmp/ccwsLkcC.s:50     .text.HAL_PWR_DeInit:0000000000000018 $d
+     /tmp/ccwsLkcC.s:56     .text.HAL_PWR_EnableBkUpAccess:0000000000000000 $t
+     /tmp/ccwsLkcC.s:62     .text.HAL_PWR_EnableBkUpAccess:0000000000000000 HAL_PWR_EnableBkUpAccess
+     /tmp/ccwsLkcC.s:82     .text.HAL_PWR_EnableBkUpAccess:0000000000000010 $d
+     /tmp/ccwsLkcC.s:87     .text.HAL_PWR_DisableBkUpAccess:0000000000000000 $t
+     /tmp/ccwsLkcC.s:93     .text.HAL_PWR_DisableBkUpAccess:0000000000000000 HAL_PWR_DisableBkUpAccess
+     /tmp/ccwsLkcC.s:112    .text.HAL_PWR_DisableBkUpAccess:000000000000000c $d
+     /tmp/ccwsLkcC.s:118    .rodata.HAL_PWR_EnableWakeUpPin.str1.4:0000000000000000 $d
+     /tmp/ccwsLkcC.s:123    .text.HAL_PWR_EnableWakeUpPin:0000000000000000 $t
+     /tmp/ccwsLkcC.s:129    .text.HAL_PWR_EnableWakeUpPin:0000000000000000 HAL_PWR_EnableWakeUpPin
+     /tmp/ccwsLkcC.s:182    .text.HAL_PWR_EnableWakeUpPin:0000000000000034 $d
+     /tmp/ccwsLkcC.s:190    .text.HAL_PWR_DisableWakeUpPin:0000000000000000 $t
+     /tmp/ccwsLkcC.s:196    .text.HAL_PWR_DisableWakeUpPin:0000000000000000 HAL_PWR_DisableWakeUpPin
+     /tmp/ccwsLkcC.s:243    .text.HAL_PWR_DisableWakeUpPin:0000000000000028 $d
+     /tmp/ccwsLkcC.s:251    .text.HAL_PWR_EnterSLEEPMode:0000000000000000 $t
+     /tmp/ccwsLkcC.s:257    .text.HAL_PWR_EnterSLEEPMode:0000000000000000 HAL_PWR_EnterSLEEPMode
+     /tmp/ccwsLkcC.s:387    .text.HAL_PWR_EnterSLEEPMode:0000000000000070 $d
+     /tmp/ccwsLkcC.s:394    .text.HAL_PWR_EnterSTOPMode:0000000000000000 $t
+     /tmp/ccwsLkcC.s:400    .text.HAL_PWR_EnterSTOPMode:0000000000000000 HAL_PWR_EnterSTOPMode
+     /tmp/ccwsLkcC.s:524    .text.HAL_PWR_EnterSTOPMode:0000000000000074 $d
+     /tmp/ccwsLkcC.s:531    .text.HAL_PWR_EnterSTANDBYMode:0000000000000000 $t
+     /tmp/ccwsLkcC.s:537    .text.HAL_PWR_EnterSTANDBYMode:0000000000000000 HAL_PWR_EnterSTANDBYMode
+     /tmp/ccwsLkcC.s:571    .text.HAL_PWR_EnterSTANDBYMode:000000000000001c $d
+     /tmp/ccwsLkcC.s:577    .text.HAL_PWR_EnableSleepOnExit:0000000000000000 $t
+     /tmp/ccwsLkcC.s:583    .text.HAL_PWR_EnableSleepOnExit:0000000000000000 HAL_PWR_EnableSleepOnExit
+     /tmp/ccwsLkcC.s:602    .text.HAL_PWR_EnableSleepOnExit:000000000000000c $d
+     /tmp/ccwsLkcC.s:607    .text.HAL_PWR_DisableSleepOnExit:0000000000000000 $t
+     /tmp/ccwsLkcC.s:613    .text.HAL_PWR_DisableSleepOnExit:0000000000000000 HAL_PWR_DisableSleepOnExit
+     /tmp/ccwsLkcC.s:632    .text.HAL_PWR_DisableSleepOnExit:000000000000000c $d
+     /tmp/ccwsLkcC.s:637    .text.HAL_PWR_EnableSEVOnPend:0000000000000000 $t
+     /tmp/ccwsLkcC.s:643    .text.HAL_PWR_EnableSEVOnPend:0000000000000000 HAL_PWR_EnableSEVOnPend
+     /tmp/ccwsLkcC.s:662    .text.HAL_PWR_EnableSEVOnPend:000000000000000c $d
+     /tmp/ccwsLkcC.s:667    .text.HAL_PWR_DisableSEVOnPend:0000000000000000 $t
+     /tmp/ccwsLkcC.s:673    .text.HAL_PWR_DisableSEVOnPend:0000000000000000 HAL_PWR_DisableSEVOnPend
+     /tmp/ccwsLkcC.s:692    .text.HAL_PWR_DisableSEVOnPend:000000000000000c $d
+
+UNDEFINED SYMBOLS
+assert_failed
+HAL_PWREx_EnableLowPowerRunMode
+HAL_PWREx_DisableLowPowerRunMode

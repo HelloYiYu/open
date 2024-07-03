@@ -1,0 +1,1114 @@
+ARM GAS  /tmp/cc9hkaz9.s 			page 1
+
+
+   1              		.cpu cortex-m0plus
+   2              		.arch armv6s-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 0
+  12              		.eabi_attribute 18, 4
+  13              		.file	"lp262_thread.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.lp262_thread_init,"ax",%progbits
+  18              		.align	1
+  19              		.global	lp262_thread_init
+  20              		.syntax unified
+  21              		.code	16
+  22              		.thumb_func
+  24              	lp262_thread_init:
+  25              	.LFB341:
+  26              		.file 1 "App/lp262_thread.c"
+   1:App/lp262_thread.c **** // https://www.cnblogs.com/schips/p/rtos-freertos-06.html
+   2:App/lp262_thread.c **** 
+   3:App/lp262_thread.c **** #include "FreeRTOS.h"
+   4:App/lp262_thread.c **** #include "task.h"
+   5:App/lp262_thread.c **** #include "cmsis_os.h"
+   6:App/lp262_thread.c **** 
+   7:App/lp262_thread.c **** #include "debug.h"
+   8:App/lp262_thread.c **** #include "my_list.h"
+   9:App/lp262_thread.c **** #include "lp262.h"
+  10:App/lp262_thread.c **** #include "fsm.h"
+  11:App/lp262_thread.c **** 
+  12:App/lp262_thread.c **** 
+  13:App/lp262_thread.c **** #define ARRAY_SIZE(a) (sizeof(a)/sizeof(a[0]))
+  14:App/lp262_thread.c **** 
+  15:App/lp262_thread.c **** extern osMutexId fsm_event_mtxHandle;
+  16:App/lp262_thread.c **** extern osThreadId lp262_threadHandle;
+  17:App/lp262_thread.c **** 
+  18:App/lp262_thread.c **** struct FSM_STATE lp262_state_init;
+  19:App/lp262_thread.c **** struct FSM_STATE lp262_state_power_up;
+  20:App/lp262_thread.c **** struct FSM_STATE lp262_state_config;
+  21:App/lp262_thread.c **** struct FSM_STATE lp262_state_wait_wifi;
+  22:App/lp262_thread.c **** struct FSM_STATE lp262_state_wait_socket;
+  23:App/lp262_thread.c **** struct FSM_STATE lp262_state_entm;
+  24:App/lp262_thread.c **** 
+  25:App/lp262_thread.c **** static struct FSM_ACTION lp262_action_init[] = {
+  26:App/lp262_thread.c ****     {LP262_EVT_WELCOM, NULL, NULL, &lp262_state_power_up},
+  27:App/lp262_thread.c **** };
+  28:App/lp262_thread.c **** 
+  29:App/lp262_thread.c **** static struct FSM_ACTION lp262_action_power_up[] = {
+  30:App/lp262_thread.c ****     {LP262_EVT_INTERNAL, NULL, NULL, &lp262_state_config},
+  31:App/lp262_thread.c **** };
+  32:App/lp262_thread.c **** 
+ARM GAS  /tmp/cc9hkaz9.s 			page 2
+
+
+  33:App/lp262_thread.c **** static struct FSM_ACTION lp262_action_config[] = {
+  34:App/lp262_thread.c ****     {LP262_EVT_INTERNAL, NULL, NULL, &lp262_state_wait_wifi},
+  35:App/lp262_thread.c **** };
+  36:App/lp262_thread.c **** 
+  37:App/lp262_thread.c **** static struct FSM_ACTION lp262_action_wait_wifi[] = {
+  38:App/lp262_thread.c ****     {LP262_EVT_INTERNAL, NULL, NULL, &lp262_state_wait_socket},
+  39:App/lp262_thread.c **** };
+  40:App/lp262_thread.c **** 
+  41:App/lp262_thread.c **** static struct FSM_ACTION lp262_action_wait_socket[] = {
+  42:App/lp262_thread.c ****     {LP262_EVT_INTERNAL, NULL, NULL, &lp262_state_entm},
+  43:App/lp262_thread.c **** };
+  44:App/lp262_thread.c **** 
+  45:App/lp262_thread.c **** static struct FSM_ACTION lp262_action_entm[] = {
+  46:App/lp262_thread.c ****     {LP262_EVT_INTERNAL, NULL, NULL, &lp262_state_init},
+  47:App/lp262_thread.c **** };
+  48:App/lp262_thread.c **** 
+  49:App/lp262_thread.c **** struct FSM_STATE lp262_state_init = {
+  50:App/lp262_thread.c ****     .name = "init",
+  51:App/lp262_thread.c ****     .enter_func = NULL,
+  52:App/lp262_thread.c ****     .leave_func = NULL,
+  53:App/lp262_thread.c ****     .action_list_count = ARRAY_SIZE(lp262_action_init),
+  54:App/lp262_thread.c ****     .action_list = lp262_action_init,
+  55:App/lp262_thread.c **** };
+  56:App/lp262_thread.c **** 
+  57:App/lp262_thread.c **** struct FSM_STATE lp262_state_power_up = {
+  58:App/lp262_thread.c ****     .name = "power_up",
+  59:App/lp262_thread.c ****     .enter_func = NULL,
+  60:App/lp262_thread.c ****     .leave_func = NULL,
+  61:App/lp262_thread.c ****     .action_list_count = ARRAY_SIZE(lp262_action_power_up),
+  62:App/lp262_thread.c ****     .action_list = lp262_action_power_up,
+  63:App/lp262_thread.c **** };
+  64:App/lp262_thread.c **** 
+  65:App/lp262_thread.c **** struct FSM_STATE lp262_state_config = {
+  66:App/lp262_thread.c ****     .name = "config",
+  67:App/lp262_thread.c ****     .enter_func = NULL,
+  68:App/lp262_thread.c ****     .leave_func = NULL,
+  69:App/lp262_thread.c ****     .action_list_count = ARRAY_SIZE(lp262_action_config),
+  70:App/lp262_thread.c ****     .action_list = lp262_action_config,
+  71:App/lp262_thread.c **** };
+  72:App/lp262_thread.c **** 
+  73:App/lp262_thread.c **** struct FSM_STATE lp262_state_wait_wifi = {
+  74:App/lp262_thread.c ****     .name = "wait_wifi",
+  75:App/lp262_thread.c ****     .enter_func = NULL,
+  76:App/lp262_thread.c ****     .leave_func = NULL,
+  77:App/lp262_thread.c ****     .action_list_count = ARRAY_SIZE(lp262_action_wait_wifi),
+  78:App/lp262_thread.c ****     .action_list = lp262_action_wait_wifi,
+  79:App/lp262_thread.c **** };
+  80:App/lp262_thread.c **** 
+  81:App/lp262_thread.c **** struct FSM_STATE lp262_state_wait_socket = {
+  82:App/lp262_thread.c ****     .name = "wait_socket",
+  83:App/lp262_thread.c ****     .enter_func = NULL,
+  84:App/lp262_thread.c ****     .leave_func = NULL,
+  85:App/lp262_thread.c ****     .action_list_count = ARRAY_SIZE(lp262_action_wait_socket),
+  86:App/lp262_thread.c ****     .action_list = lp262_action_wait_socket,
+  87:App/lp262_thread.c **** };
+  88:App/lp262_thread.c **** 
+  89:App/lp262_thread.c **** struct FSM_STATE lp262_state_entm = {
+ARM GAS  /tmp/cc9hkaz9.s 			page 3
+
+
+  90:App/lp262_thread.c ****     .name = "entm",
+  91:App/lp262_thread.c ****     .enter_func = NULL,
+  92:App/lp262_thread.c ****     .leave_func = NULL,
+  93:App/lp262_thread.c ****     .action_list_count = ARRAY_SIZE(lp262_action_entm),
+  94:App/lp262_thread.c ****     .action_list = lp262_action_entm,
+  95:App/lp262_thread.c **** };
+  96:App/lp262_thread.c **** 
+  97:App/lp262_thread.c **** 
+  98:App/lp262_thread.c **** static struct FSM_ENTITY lp262_fsm = {
+  99:App/lp262_thread.c **** 	.name = "lp262",
+ 100:App/lp262_thread.c **** 	.state = &lp262_state_init,
+ 101:App/lp262_thread.c **** };
+ 102:App/lp262_thread.c **** static struct list_head lp262_event_list;
+ 103:App/lp262_thread.c **** 
+ 104:App/lp262_thread.c **** 
+ 105:App/lp262_thread.c **** void lp262_thread_init(void)
+ 106:App/lp262_thread.c **** {
+  27              		.loc 1 106 1 view -0
+  28              		.cfi_startproc
+  29              		@ args = 0, pretend = 0, frame = 0
+  30              		@ frame_needed = 0, uses_anonymous_args = 0
+  31              		@ link register save eliminated.
+ 107:App/lp262_thread.c **** 	init_list_head(&lp262_event_list);
+  32              		.loc 1 107 2 view .LVU1
+  33              	.LVL0:
+  34              	.LBB44:
+  35              	.LBI44:
+  36              		.file 2 "App/Include/my_list.h"
+   1:App/Include/my_list.h **** #ifndef __MY_LIST_H__
+   2:App/Include/my_list.h **** #define __MY_LIST_H__
+   3:App/Include/my_list.h **** 
+   4:App/Include/my_list.h **** 
+   5:App/Include/my_list.h **** struct list_head {
+   6:App/Include/my_list.h ****     struct list_head *next, *prev;
+   7:App/Include/my_list.h **** };
+   8:App/Include/my_list.h **** 
+   9:App/Include/my_list.h **** #ifndef offsetof
+  10:App/Include/my_list.h **** #define offsetof(TYPE, MEMBER) ((size_t) &((TYPE *)0)->MEMBER)
+  11:App/Include/my_list.h **** #endif
+  12:App/Include/my_list.h **** 
+  13:App/Include/my_list.h **** #define container_of(ptr, type, member) ({                    \
+  14:App/Include/my_list.h ****     const typeof( ((type *)0)->member ) *__mptr = (ptr);      \
+  15:App/Include/my_list.h ****     (type *)( (char *)__mptr - offsetof(type,member) );       \
+  16:App/Include/my_list.h **** })
+  17:App/Include/my_list.h **** 
+  18:App/Include/my_list.h **** #define list_entry(ptr, type, member)                         \
+  19:App/Include/my_list.h ****     container_of(ptr, type, member)
+  20:App/Include/my_list.h **** 
+  21:App/Include/my_list.h **** #define list_first_entry(ptr, type, member)                   \
+  22:App/Include/my_list.h ****     list_entry((ptr)->next, type, member)
+  23:App/Include/my_list.h **** 
+  24:App/Include/my_list.h **** #define list_entry_is_head(pos, head, member)                 \
+  25:App/Include/my_list.h ****     list_is_head(&pos->member, (head))
+  26:App/Include/my_list.h **** 
+  27:App/Include/my_list.h **** #define list_for_each_entry(pos, head, member)                \
+  28:App/Include/my_list.h ****     for (pos = list_first_entry(head, typeof(*pos), member);  \
+  29:App/Include/my_list.h ****          !list_entry_is_head(pos, head, member);              \
+ARM GAS  /tmp/cc9hkaz9.s 			page 4
+
+
+  30:App/Include/my_list.h ****          pos = list_next_entry(pos, member))
+  31:App/Include/my_list.h **** 
+  32:App/Include/my_list.h **** #define list_for_each_entry_safe(pos, n, head, member)        \
+  33:App/Include/my_list.h ****     for (pos = list_first_entry(head, typeof(*pos), member),  \
+  34:App/Include/my_list.h ****             n = list_next_entry(pos, member);                 \
+  35:App/Include/my_list.h ****         &pos->member != (head);                               \
+  36:App/Include/my_list.h **** 	pos = n, n = list_next_entry(n, member))
+  37:App/Include/my_list.h **** 
+  38:App/Include/my_list.h **** #define list_next_entry(pos, member) \
+  39:App/Include/my_list.h **** 	list_entry((pos)->member.next, typeof(*(pos)), member)
+  40:App/Include/my_list.h **** 
+  41:App/Include/my_list.h **** static inline void __list_add(struct list_head *new,
+  42:App/Include/my_list.h ****                   struct list_head *prev,
+  43:App/Include/my_list.h ****                   struct list_head *next)
+  44:App/Include/my_list.h **** {
+  45:App/Include/my_list.h ****     next->prev = new;
+  46:App/Include/my_list.h ****     new->next = next;
+  47:App/Include/my_list.h ****     new->prev = prev;
+  48:App/Include/my_list.h ****     prev->next = new;
+  49:App/Include/my_list.h **** }
+  50:App/Include/my_list.h **** 
+  51:App/Include/my_list.h **** static inline void __list_del(struct list_head * prev, struct list_head * next)
+  52:App/Include/my_list.h **** {
+  53:App/Include/my_list.h ****     next->prev = prev;
+  54:App/Include/my_list.h ****     prev->next = next;
+  55:App/Include/my_list.h **** }
+  56:App/Include/my_list.h **** 
+  57:App/Include/my_list.h **** static inline void __list_del_entry(struct list_head *entry)
+  58:App/Include/my_list.h **** {
+  59:App/Include/my_list.h ****     __list_del(entry->prev, entry->next);
+  60:App/Include/my_list.h **** }
+  61:App/Include/my_list.h **** 
+  62:App/Include/my_list.h **** static inline void __list_splice(const struct list_head *list,
+  63:App/Include/my_list.h **** 				struct list_head *prev,
+  64:App/Include/my_list.h **** 				struct list_head *next)
+  65:App/Include/my_list.h **** {
+  66:App/Include/my_list.h **** 	struct list_head *first = list->next;
+  67:App/Include/my_list.h **** 	struct list_head *last = list->prev;
+  68:App/Include/my_list.h **** 
+  69:App/Include/my_list.h **** 	first->prev = prev;
+  70:App/Include/my_list.h **** 	prev->next = first;
+  71:App/Include/my_list.h **** 
+  72:App/Include/my_list.h **** 	last->next = next;
+  73:App/Include/my_list.h **** 	next->prev = last;
+  74:App/Include/my_list.h **** }
+  75:App/Include/my_list.h **** 
+  76:App/Include/my_list.h **** static inline void init_list_head(struct list_head *list)
+  37              		.loc 2 76 20 view .LVU2
+  38              	.LBB45:
+  77:App/Include/my_list.h **** {
+  78:App/Include/my_list.h ****     list->next = list;
+  39              		.loc 2 78 5 view .LVU3
+  40              		.loc 2 78 16 is_stmt 0 view .LVU4
+  41 0000 014B     		ldr	r3, .L2
+  42 0002 1B60     		str	r3, [r3]
+  79:App/Include/my_list.h ****     list->prev = list;
+  43              		.loc 2 79 5 is_stmt 1 view .LVU5
+ARM GAS  /tmp/cc9hkaz9.s 			page 5
+
+
+  44              		.loc 2 79 16 is_stmt 0 view .LVU6
+  45 0004 5B60     		str	r3, [r3, #4]
+  46              	.LVL1:
+  47              		.loc 2 79 16 view .LVU7
+  48              	.LBE45:
+  49              	.LBE44:
+ 108:App/lp262_thread.c **** }
+  50              		.loc 1 108 1 view .LVU8
+  51              		@ sp needed
+  52 0006 7047     		bx	lr
+  53              	.L3:
+  54              		.align	2
+  55              	.L2:
+  56 0008 00000000 		.word	.LANCHOR0
+  57              		.cfi_endproc
+  58              	.LFE341:
+  60              		.section	.text.lp262_send_event,"ax",%progbits
+  61              		.align	1
+  62              		.global	lp262_send_event
+  63              		.syntax unified
+  64              		.code	16
+  65              		.thumb_func
+  67              	lp262_send_event:
+  68              	.LVL2:
+  69              	.LFB342:
+ 109:App/lp262_thread.c **** 
+ 110:App/lp262_thread.c **** /* param should be NULL or a pointer fraom pvPortMalloc */
+ 111:App/lp262_thread.c **** void lp262_send_event(uint32_t event_id, void *param)
+ 112:App/lp262_thread.c **** {
+  70              		.loc 1 112 1 is_stmt 1 view -0
+  71              		.cfi_startproc
+  72              		@ args = 0, pretend = 0, frame = 0
+  73              		@ frame_needed = 0, uses_anonymous_args = 0
+  74              		.loc 1 112 1 is_stmt 0 view .LVU10
+  75 0000 70B5     		push	{r4, r5, r6, lr}
+  76              	.LCFI0:
+  77              		.cfi_def_cfa_offset 16
+  78              		.cfi_offset 4, -16
+  79              		.cfi_offset 5, -12
+  80              		.cfi_offset 6, -8
+  81              		.cfi_offset 14, -4
+  82 0002 0500     		movs	r5, r0
+  83 0004 0E00     		movs	r6, r1
+ 113:App/lp262_thread.c **** 	struct FSM_EVENT *event;
+  84              		.loc 1 113 2 is_stmt 1 view .LVU11
+ 114:App/lp262_thread.c **** 
+ 115:App/lp262_thread.c **** 	event = (struct FSM_EVENT *)pvPortMalloc(sizeof(struct FSM_EVENT));
+  85              		.loc 1 115 2 view .LVU12
+  86              		.loc 1 115 30 is_stmt 0 view .LVU13
+  87 0006 1420     		movs	r0, #20
+  88              	.LVL3:
+  89              		.loc 1 115 30 view .LVU14
+  90 0008 FFF7FEFF 		bl	pvPortMalloc
+  91              	.LVL4:
+  92              		.loc 1 115 30 view .LVU15
+  93 000c 041E     		subs	r4, r0, #0
+  94              	.LVL5:
+ARM GAS  /tmp/cc9hkaz9.s 			page 6
+
+
+ 116:App/lp262_thread.c **** 	if (!event)
+  95              		.loc 1 116 2 is_stmt 1 view .LVU16
+  96              		.loc 1 116 5 is_stmt 0 view .LVU17
+  97 000e 17D0     		beq	.L4
+ 117:App/lp262_thread.c **** 		return;
+ 118:App/lp262_thread.c **** 
+ 119:App/lp262_thread.c **** 	event->event_id = event_id;
+  98              		.loc 1 119 2 is_stmt 1 view .LVU18
+  99              		.loc 1 119 18 is_stmt 0 view .LVU19
+ 100 0010 8560     		str	r5, [r0, #8]
+ 120:App/lp262_thread.c ****     event->param = param;
+ 101              		.loc 1 120 5 is_stmt 1 view .LVU20
+ 102              		.loc 1 120 18 is_stmt 0 view .LVU21
+ 103 0012 0661     		str	r6, [r0, #16]
+ 121:App/lp262_thread.c **** 
+ 122:App/lp262_thread.c **** 	osMutexWait(fsm_event_mtxHandle, osWaitForever);
+ 104              		.loc 1 122 2 is_stmt 1 view .LVU22
+ 105 0014 0121     		movs	r1, #1
+ 106 0016 0B4D     		ldr	r5, .L6
+ 107              	.LVL6:
+ 108              		.loc 1 122 2 is_stmt 0 view .LVU23
+ 109 0018 4942     		rsbs	r1, r1, #0
+ 110 001a 2868     		ldr	r0, [r5]
+ 111              	.LVL7:
+ 112              		.loc 1 122 2 view .LVU24
+ 113 001c FFF7FEFF 		bl	osMutexWait
+ 114              	.LVL8:
+ 123:App/lp262_thread.c **** 	list_add_tail(&event->node, &lp262_event_list);
+ 115              		.loc 1 123 2 is_stmt 1 view .LVU25
+ 116              	.LBB46:
+ 117              	.LBI46:
+  80:App/Include/my_list.h **** }
+  81:App/Include/my_list.h **** 
+  82:App/Include/my_list.h **** static inline void list_add(struct list_head *new, struct list_head *head)
+  83:App/Include/my_list.h **** {
+  84:App/Include/my_list.h ****     __list_add(new, head, head->next);
+  85:App/Include/my_list.h **** }
+  86:App/Include/my_list.h **** 
+  87:App/Include/my_list.h **** static inline void list_add_tail(struct list_head *new, struct list_head *head)
+ 118              		.loc 2 87 20 view .LVU26
+ 119              	.LBB47:
+  88:App/Include/my_list.h **** {
+  89:App/Include/my_list.h ****     __list_add(new, head->prev, head);
+ 120              		.loc 2 89 5 view .LVU27
+ 121 0020 094B     		ldr	r3, .L6+4
+ 122 0022 5A68     		ldr	r2, [r3, #4]
+ 123              	.LVL9:
+ 124              	.LBB48:
+ 125              	.LBI48:
+  41:App/Include/my_list.h ****                   struct list_head *prev,
+ 126              		.loc 2 41 20 view .LVU28
+ 127              	.LBB49:
+  45:App/Include/my_list.h ****     new->next = next;
+ 128              		.loc 2 45 5 view .LVU29
+  45:App/Include/my_list.h ****     new->next = next;
+ 129              		.loc 2 45 16 is_stmt 0 view .LVU30
+ 130 0024 5C60     		str	r4, [r3, #4]
+ARM GAS  /tmp/cc9hkaz9.s 			page 7
+
+
+  46:App/Include/my_list.h ****     new->prev = prev;
+ 131              		.loc 2 46 5 is_stmt 1 view .LVU31
+  46:App/Include/my_list.h ****     new->prev = prev;
+ 132              		.loc 2 46 15 is_stmt 0 view .LVU32
+ 133 0026 2360     		str	r3, [r4]
+  47:App/Include/my_list.h ****     prev->next = new;
+ 134              		.loc 2 47 5 is_stmt 1 view .LVU33
+  47:App/Include/my_list.h ****     prev->next = new;
+ 135              		.loc 2 47 15 is_stmt 0 view .LVU34
+ 136 0028 6260     		str	r2, [r4, #4]
+  48:App/Include/my_list.h **** }
+ 137              		.loc 2 48 5 is_stmt 1 view .LVU35
+  48:App/Include/my_list.h **** }
+ 138              		.loc 2 48 16 is_stmt 0 view .LVU36
+ 139 002a 1460     		str	r4, [r2]
+ 140              	.LVL10:
+  48:App/Include/my_list.h **** }
+ 141              		.loc 2 48 16 view .LVU37
+ 142              	.LBE49:
+ 143              	.LBE48:
+ 144              	.LBE47:
+ 145              	.LBE46:
+ 124:App/lp262_thread.c **** 	osMutexRelease(fsm_event_mtxHandle);
+ 146              		.loc 1 124 2 is_stmt 1 view .LVU38
+ 147 002c 2868     		ldr	r0, [r5]
+ 148 002e FFF7FEFF 		bl	osMutexRelease
+ 149              	.LVL11:
+ 125:App/lp262_thread.c **** 
+ 126:App/lp262_thread.c **** 	xTaskNotifyGive(lp262_threadHandle);
+ 150              		.loc 1 126 2 view .LVU39
+ 151 0032 064B     		ldr	r3, .L6+8
+ 152 0034 1868     		ldr	r0, [r3]
+ 153 0036 0023     		movs	r3, #0
+ 154 0038 0222     		movs	r2, #2
+ 155 003a 0021     		movs	r1, #0
+ 156 003c FFF7FEFF 		bl	xTaskGenericNotify
+ 157              	.LVL12:
+ 158              	.L4:
+ 127:App/lp262_thread.c **** }
+ 159              		.loc 1 127 1 is_stmt 0 view .LVU40
+ 160              		@ sp needed
+ 161              	.LVL13:
+ 162              	.LVL14:
+ 163              		.loc 1 127 1 view .LVU41
+ 164 0040 70BD     		pop	{r4, r5, r6, pc}
+ 165              	.L7:
+ 166 0042 C046     		.align	2
+ 167              	.L6:
+ 168 0044 00000000 		.word	fsm_event_mtxHandle
+ 169 0048 00000000 		.word	.LANCHOR0
+ 170 004c 00000000 		.word	lp262_threadHandle
+ 171              		.cfi_endproc
+ 172              	.LFE342:
+ 174              		.section	.text.lp262_hw_reset,"ax",%progbits
+ 175              		.align	1
+ 176              		.global	lp262_hw_reset
+ 177              		.syntax unified
+ARM GAS  /tmp/cc9hkaz9.s 			page 8
+
+
+ 178              		.code	16
+ 179              		.thumb_func
+ 181              	lp262_hw_reset:
+ 182              	.LFB343:
+ 128:App/lp262_thread.c **** 
+ 129:App/lp262_thread.c **** void lp262_hw_reset(void)
+ 130:App/lp262_thread.c **** {
+ 183              		.loc 1 130 1 is_stmt 1 view -0
+ 184              		.cfi_startproc
+ 185              		@ args = 0, pretend = 0, frame = 0
+ 186              		@ frame_needed = 0, uses_anonymous_args = 0
+ 187              		@ link register save eliminated.
+ 131:App/lp262_thread.c **** 
+ 132:App/lp262_thread.c **** }
+ 188              		.loc 1 132 1 view .LVU43
+ 189              		@ sp needed
+ 190 0000 7047     		bx	lr
+ 191              		.cfi_endproc
+ 192              	.LFE343:
+ 194              		.section	.rodata.lp262_thread_func.str1.4,"aMS",%progbits,1
+ 195              		.align	2
+ 196              	.LC6:
+ 197 0000 25732073 		.ascii	"%s started.\012\000"
+ 197      74617274 
+ 197      65642E0A 
+ 197      00
+ 198              		.section	.text.lp262_thread_func,"ax",%progbits
+ 199              		.align	1
+ 200              		.global	lp262_thread_func
+ 201              		.syntax unified
+ 202              		.code	16
+ 203              		.thumb_func
+ 205              	lp262_thread_func:
+ 206              	.LVL15:
+ 207              	.LFB344:
+ 133:App/lp262_thread.c **** 
+ 134:App/lp262_thread.c **** void lp262_thread_func(void const * argument)
+ 135:App/lp262_thread.c **** {
+ 208              		.loc 1 135 1 view -0
+ 209              		.cfi_startproc
+ 210              		@ args = 0, pretend = 0, frame = 8
+ 211              		@ frame_needed = 0, uses_anonymous_args = 0
+ 212              		.loc 1 135 1 is_stmt 0 view .LVU45
+ 213 0000 70B5     		push	{r4, r5, r6, lr}
+ 214              	.LCFI1:
+ 215              		.cfi_def_cfa_offset 16
+ 216              		.cfi_offset 4, -16
+ 217              		.cfi_offset 5, -12
+ 218              		.cfi_offset 6, -8
+ 219              		.cfi_offset 14, -4
+ 220 0002 82B0     		sub	sp, sp, #8
+ 221              	.LCFI2:
+ 222              		.cfi_def_cfa_offset 24
+ 136:App/lp262_thread.c **** 	struct list_head temp_list;
+ 223              		.loc 1 136 2 is_stmt 1 view .LVU46
+ 137:App/lp262_thread.c **** 	struct FSM_EVENT *event, *next;
+ 224              		.loc 1 137 2 view .LVU47
+ARM GAS  /tmp/cc9hkaz9.s 			page 9
+
+
+ 138:App/lp262_thread.c **** 
+ 139:App/lp262_thread.c **** 	init_list_head(&temp_list);
+ 225              		.loc 1 139 2 view .LVU48
+ 226              	.LVL16:
+ 227              	.LBB50:
+ 228              	.LBI50:
+  76:App/Include/my_list.h **** {
+ 229              		.loc 2 76 20 view .LVU49
+ 230              	.LBB51:
+  78:App/Include/my_list.h ****     list->prev = list;
+ 231              		.loc 2 78 5 view .LVU50
+  78:App/Include/my_list.h ****     list->prev = list;
+ 232              		.loc 2 78 16 is_stmt 0 view .LVU51
+ 233 0004 6B46     		mov	r3, sp
+ 234 0006 0093     		str	r3, [sp]
+  79:App/Include/my_list.h **** }
+ 235              		.loc 2 79 5 is_stmt 1 view .LVU52
+  79:App/Include/my_list.h **** }
+ 236              		.loc 2 79 16 is_stmt 0 view .LVU53
+ 237 0008 0193     		str	r3, [sp, #4]
+ 238              	.LVL17:
+  79:App/Include/my_list.h **** }
+ 239              		.loc 2 79 16 view .LVU54
+ 240              	.LBE51:
+ 241              	.LBE50:
+ 242              	.LBB52:
+ 140:App/lp262_thread.c **** 
+ 141:App/lp262_thread.c ****     print_log("%s started.\n", __func__);
+ 243              		.loc 1 141 5 is_stmt 1 view .LVU55
+ 244              		.loc 1 141 5 view .LVU56
+ 245              		.loc 1 141 5 view .LVU57
+ 246 000a 0121     		movs	r1, #1
+ 247 000c 2E4D     		ldr	r5, .L15
+ 248 000e 4942     		rsbs	r1, r1, #0
+ 249 0010 2868     		ldr	r0, [r5]
+ 250              	.LVL18:
+ 251              		.loc 1 141 5 is_stmt 0 view .LVU58
+ 252 0012 FFF7FEFF 		bl	osMutexWait
+ 253              	.LVL19:
+ 254              		.loc 1 141 5 is_stmt 1 view .LVU59
+ 255 0016 8021     		movs	r1, #128
+ 256 0018 2C4E     		ldr	r6, .L15+4
+ 257 001a 2D4B     		ldr	r3, .L15+8
+ 258 001c 2D4A     		ldr	r2, .L15+12
+ 259 001e C900     		lsls	r1, r1, #3
+ 260 0020 3000     		movs	r0, r6
+ 261 0022 FFF7FEFF 		bl	snprintf
+ 262              	.LVL20:
+ 263              		.loc 1 141 5 view .LVU60
+ 264 0026 1C20     		movs	r0, #28
+ 265 0028 FFF7FEFF 		bl	pvPortMalloc
+ 266              	.LVL21:
+ 267 002c 0400     		movs	r4, r0
+ 268              	.LVL22:
+ 269              		.loc 1 141 5 view .LVU61
+ 270 002e 1B22     		movs	r2, #27
+ 271 0030 3100     		movs	r1, r6
+ARM GAS  /tmp/cc9hkaz9.s 			page 10
+
+
+ 272 0032 FFF7FEFF 		bl	memcpy
+ 273              	.LVL23:
+ 274              		.loc 1 141 5 view .LVU62
+ 275 0036 2868     		ldr	r0, [r5]
+ 276 0038 FFF7FEFF 		bl	osMutexRelease
+ 277              	.LVL24:
+ 278              		.loc 1 141 5 view .LVU63
+ 279 003c 0023     		movs	r3, #0
+ 280 003e 2377     		strb	r3, [r4, #28]
+ 281              		.loc 1 141 5 view .LVU64
+ 282 0040 1B21     		movs	r1, #27
+ 283 0042 2000     		movs	r0, r4
+ 284 0044 FFF7FEFF 		bl	uart4_send
+ 285              	.LVL25:
+ 286              		.loc 1 141 5 view .LVU65
+ 287 0048 2000     		movs	r0, r4
+ 288 004a FFF7FEFF 		bl	vPortFree
+ 289              	.LVL26:
+ 290              	.LBE52:
+ 291              		.loc 1 141 41 view .LVU66
+ 142:App/lp262_thread.c **** 
+ 143:App/lp262_thread.c ****     lp262_hw_reset();
+ 292              		.loc 1 143 5 view .LVU67
+ 293              	.L14:
+ 144:App/lp262_thread.c **** 
+ 145:App/lp262_thread.c **** 	for (;;) {
+ 294              		.loc 1 145 2 view .LVU68
+ 146:App/lp262_thread.c **** 		ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+ 295              		.loc 1 146 3 view .LVU69
+ 296 004e 0124     		movs	r4, #1
+ 297 0050 6442     		rsbs	r4, r4, #0
+ 298 0052 2100     		movs	r1, r4
+ 299 0054 0120     		movs	r0, #1
+ 300 0056 FFF7FEFF 		bl	ulTaskNotifyTake
+ 301              	.LVL27:
+ 147:App/lp262_thread.c **** 
+ 148:App/lp262_thread.c **** 		HAL_GPIO_TogglePin(LED3_GPIO_Port, LED3_Pin);
+ 302              		.loc 1 148 3 view .LVU70
+ 303 005a 8021     		movs	r1, #128
+ 304 005c 8900     		lsls	r1, r1, #2
+ 305 005e 1E48     		ldr	r0, .L15+16
+ 306 0060 FFF7FEFF 		bl	HAL_GPIO_TogglePin
+ 307              	.LVL28:
+ 149:App/lp262_thread.c **** 
+ 150:App/lp262_thread.c **** 		osMutexWait(fsm_event_mtxHandle, osWaitForever);
+ 308              		.loc 1 150 3 view .LVU71
+ 309 0064 1D4B     		ldr	r3, .L15+20
+ 310 0066 1868     		ldr	r0, [r3]
+ 311 0068 2100     		movs	r1, r4
+ 312 006a FFF7FEFF 		bl	osMutexWait
+ 313              	.LVL29:
+ 151:App/lp262_thread.c **** 		list_splice_init(&lp262_event_list, &temp_list);
+ 314              		.loc 1 151 3 view .LVU72
+ 315              	.LBB53:
+ 316              	.LBI53:
+  90:App/Include/my_list.h **** }
+  91:App/Include/my_list.h **** 
+ARM GAS  /tmp/cc9hkaz9.s 			page 11
+
+
+  92:App/Include/my_list.h **** static inline void list_del(struct list_head *entry)
+  93:App/Include/my_list.h **** {
+  94:App/Include/my_list.h ****     __list_del_entry(entry);
+  95:App/Include/my_list.h ****     entry->next = entry;
+  96:App/Include/my_list.h ****     entry->prev = entry;
+  97:App/Include/my_list.h **** }
+  98:App/Include/my_list.h **** 
+  99:App/Include/my_list.h **** static inline int list_is_head(const struct list_head *list, const struct list_head *head)
+ 100:App/Include/my_list.h **** {
+ 101:App/Include/my_list.h ****     return list == head;
+ 102:App/Include/my_list.h **** }
+ 103:App/Include/my_list.h **** 
+ 104:App/Include/my_list.h **** static inline int list_empty(const struct list_head *head)
+ 105:App/Include/my_list.h **** {
+ 106:App/Include/my_list.h **** 	return head->next == head;
+ 107:App/Include/my_list.h **** }
+ 108:App/Include/my_list.h **** 
+ 109:App/Include/my_list.h **** static inline void list_splice_init(struct list_head *list,
+ 317              		.loc 2 109 20 view .LVU73
+ 318              	.LBB54:
+ 110:App/Include/my_list.h ****                                 struct list_head *head)
+ 111:App/Include/my_list.h **** {
+ 112:App/Include/my_list.h **** 	if (!list_empty(list)) {
+ 319              		.loc 2 112 2 view .LVU74
+ 320              	.LBB55:
+ 321              	.LBI55:
+ 104:App/Include/my_list.h **** {
+ 322              		.loc 2 104 19 view .LVU75
+ 323              	.LBB56:
+ 106:App/Include/my_list.h **** }
+ 324              		.loc 2 106 2 view .LVU76
+ 106:App/Include/my_list.h **** }
+ 325              		.loc 2 106 13 is_stmt 0 view .LVU77
+ 326 006e 1C4B     		ldr	r3, .L15+24
+ 327 0070 1A68     		ldr	r2, [r3]
+ 328              	.LVL30:
+ 106:App/Include/my_list.h **** }
+ 329              		.loc 2 106 13 view .LVU78
+ 330              	.LBE56:
+ 331              	.LBE55:
+ 332              		.loc 2 112 5 view .LVU79
+ 333 0072 9A42     		cmp	r2, r3
+ 334 0074 08D0     		beq	.L10
+ 113:App/Include/my_list.h **** 		__list_splice(list, head, head->next);
+ 335              		.loc 2 113 3 is_stmt 1 view .LVU80
+ 336 0076 0099     		ldr	r1, [sp]
+ 337              	.LVL31:
+ 338              	.LBB57:
+ 339              	.LBI57:
+  62:App/Include/my_list.h **** 				struct list_head *prev,
+ 340              		.loc 2 62 20 view .LVU81
+ 341              	.LBB58:
+  66:App/Include/my_list.h **** 	struct list_head *last = list->prev;
+ 342              		.loc 2 66 2 view .LVU82
+  67:App/Include/my_list.h **** 
+ 343              		.loc 2 67 2 view .LVU83
+  67:App/Include/my_list.h **** 
+ARM GAS  /tmp/cc9hkaz9.s 			page 12
+
+
+ 344              		.loc 2 67 20 is_stmt 0 view .LVU84
+ 345 0078 5868     		ldr	r0, [r3, #4]
+ 346              	.LVL32:
+  69:App/Include/my_list.h **** 	prev->next = first;
+ 347              		.loc 2 69 2 is_stmt 1 view .LVU85
+  69:App/Include/my_list.h **** 	prev->next = first;
+ 348              		.loc 2 69 14 is_stmt 0 view .LVU86
+ 349 007a 6C46     		mov	r4, sp
+ 350 007c 5460     		str	r4, [r2, #4]
+  70:App/Include/my_list.h **** 
+ 351              		.loc 2 70 2 is_stmt 1 view .LVU87
+  70:App/Include/my_list.h **** 
+ 352              		.loc 2 70 13 is_stmt 0 view .LVU88
+ 353 007e 0092     		str	r2, [sp]
+  72:App/Include/my_list.h **** 	next->prev = last;
+ 354              		.loc 2 72 2 is_stmt 1 view .LVU89
+  72:App/Include/my_list.h **** 	next->prev = last;
+ 355              		.loc 2 72 13 is_stmt 0 view .LVU90
+ 356 0080 0160     		str	r1, [r0]
+  73:App/Include/my_list.h **** }
+ 357              		.loc 2 73 2 is_stmt 1 view .LVU91
+  73:App/Include/my_list.h **** }
+ 358              		.loc 2 73 13 is_stmt 0 view .LVU92
+ 359 0082 4860     		str	r0, [r1, #4]
+ 360              	.LVL33:
+  73:App/Include/my_list.h **** }
+ 361              		.loc 2 73 13 view .LVU93
+ 362              	.LBE58:
+ 363              	.LBE57:
+ 114:App/Include/my_list.h **** 		init_list_head(list);
+ 364              		.loc 2 114 3 is_stmt 1 view .LVU94
+ 365              	.LBB59:
+ 366              	.LBI59:
+  76:App/Include/my_list.h **** {
+ 367              		.loc 2 76 20 view .LVU95
+ 368              	.LBB60:
+  78:App/Include/my_list.h ****     list->prev = list;
+ 369              		.loc 2 78 5 view .LVU96
+  78:App/Include/my_list.h ****     list->prev = list;
+ 370              		.loc 2 78 16 is_stmt 0 view .LVU97
+ 371 0084 1B60     		str	r3, [r3]
+  79:App/Include/my_list.h **** }
+ 372              		.loc 2 79 5 is_stmt 1 view .LVU98
+  79:App/Include/my_list.h **** }
+ 373              		.loc 2 79 16 is_stmt 0 view .LVU99
+ 374 0086 5B60     		str	r3, [r3, #4]
+ 375              	.LVL34:
+ 376              	.L10:
+  79:App/Include/my_list.h **** }
+ 377              		.loc 2 79 16 view .LVU100
+ 378              	.LBE60:
+ 379              	.LBE59:
+ 380              	.LBE54:
+ 381              	.LBE53:
+ 152:App/lp262_thread.c **** 		osMutexRelease(fsm_event_mtxHandle);
+ 382              		.loc 1 152 3 is_stmt 1 view .LVU101
+ 383 0088 144B     		ldr	r3, .L15+20
+ARM GAS  /tmp/cc9hkaz9.s 			page 13
+
+
+ 384 008a 1868     		ldr	r0, [r3]
+ 385 008c FFF7FEFF 		bl	osMutexRelease
+ 386              	.LVL35:
+ 153:App/lp262_thread.c **** 
+ 154:App/lp262_thread.c **** 		list_for_each_entry_safe(event, next, &temp_list, node) {
+ 387              		.loc 1 154 3 view .LVU102
+ 388              	.LBB61:
+ 389              		.loc 1 154 3 view .LVU103
+ 390 0090 009C     		ldr	r4, [sp]
+ 391              	.LVL36:
+ 392              		.loc 1 154 3 view .LVU104
+ 393              		.loc 1 154 3 is_stmt 0 view .LVU105
+ 394              	.LBE61:
+ 395              	.LBB62:
+ 396              		.loc 1 154 3 is_stmt 1 view .LVU106
+ 397 0092 2668     		ldr	r6, [r4]
+ 398              	.LVL37:
+ 399              		.loc 1 154 3 view .LVU107
+ 400              		.loc 1 154 3 is_stmt 0 view .LVU108
+ 401              	.LBE62:
+ 402 0094 0AE0     		b	.L11
+ 403              	.LVL38:
+ 404              	.L12:
+ 155:App/lp262_thread.c **** 			fsm_handle_event(&lp262_fsm, event);
+ 156:App/lp262_thread.c **** 
+ 157:App/lp262_thread.c ****             if (event->param)
+ 158:App/lp262_thread.c ****                 vPortFree(event->param);
+ 159:App/lp262_thread.c **** 			list_del(&event->node);
+ 405              		.loc 1 159 4 is_stmt 1 discriminator 2 view .LVU109
+ 406              	.LBB63:
+ 407              	.LBI63:
+  92:App/Include/my_list.h **** {
+ 408              		.loc 2 92 20 discriminator 2 view .LVU110
+ 409              	.LBB64:
+  94:App/Include/my_list.h ****     entry->next = entry;
+ 410              		.loc 2 94 5 discriminator 2 view .LVU111
+ 411              	.LBB65:
+ 412              	.LBI65:
+  57:App/Include/my_list.h **** {
+ 413              		.loc 2 57 20 discriminator 2 view .LVU112
+ 414              	.LBB66:
+  59:App/Include/my_list.h **** }
+ 415              		.loc 2 59 5 discriminator 2 view .LVU113
+ 416 0096 6368     		ldr	r3, [r4, #4]
+ 417 0098 2268     		ldr	r2, [r4]
+ 418              	.LVL39:
+ 419              	.LBB67:
+ 420              	.LBI67:
+  51:App/Include/my_list.h **** {
+ 421              		.loc 2 51 20 discriminator 2 view .LVU114
+ 422              	.LBB68:
+  53:App/Include/my_list.h ****     prev->next = next;
+ 423              		.loc 2 53 5 discriminator 2 view .LVU115
+  53:App/Include/my_list.h ****     prev->next = next;
+ 424              		.loc 2 53 16 is_stmt 0 discriminator 2 view .LVU116
+ 425 009a 5360     		str	r3, [r2, #4]
+  54:App/Include/my_list.h **** }
+ARM GAS  /tmp/cc9hkaz9.s 			page 14
+
+
+ 426              		.loc 2 54 5 is_stmt 1 discriminator 2 view .LVU117
+  54:App/Include/my_list.h **** }
+ 427              		.loc 2 54 16 is_stmt 0 discriminator 2 view .LVU118
+ 428 009c 1A60     		str	r2, [r3]
+ 429              	.LVL40:
+  54:App/Include/my_list.h **** }
+ 430              		.loc 2 54 16 discriminator 2 view .LVU119
+ 431              	.LBE68:
+ 432              	.LBE67:
+ 433              	.LBE66:
+ 434              	.LBE65:
+  95:App/Include/my_list.h ****     entry->prev = entry;
+ 435              		.loc 2 95 5 is_stmt 1 discriminator 2 view .LVU120
+  95:App/Include/my_list.h ****     entry->prev = entry;
+ 436              		.loc 2 95 17 is_stmt 0 discriminator 2 view .LVU121
+ 437 009e 2560     		str	r5, [r4]
+  96:App/Include/my_list.h **** }
+ 438              		.loc 2 96 5 is_stmt 1 discriminator 2 view .LVU122
+  96:App/Include/my_list.h **** }
+ 439              		.loc 2 96 17 is_stmt 0 discriminator 2 view .LVU123
+ 440 00a0 6560     		str	r5, [r4, #4]
+ 441              	.LVL41:
+  96:App/Include/my_list.h **** }
+ 442              		.loc 2 96 17 discriminator 2 view .LVU124
+ 443              	.LBE64:
+ 444              	.LBE63:
+ 160:App/lp262_thread.c **** 			vPortFree(event);
+ 445              		.loc 1 160 4 is_stmt 1 discriminator 2 view .LVU125
+ 446 00a2 2000     		movs	r0, r4
+ 447 00a4 FFF7FEFF 		bl	vPortFree
+ 448              	.LVL42:
+ 154:App/lp262_thread.c **** 			fsm_handle_event(&lp262_fsm, event);
+ 449              		.loc 1 154 3 discriminator 2 view .LVU126
+ 450              	.LBB69:
+ 154:App/lp262_thread.c **** 			fsm_handle_event(&lp262_fsm, event);
+ 451              		.loc 1 154 3 discriminator 2 view .LVU127
+ 154:App/lp262_thread.c **** 			fsm_handle_event(&lp262_fsm, event);
+ 452              		.loc 1 154 3 discriminator 2 view .LVU128
+ 154:App/lp262_thread.c **** 			fsm_handle_event(&lp262_fsm, event);
+ 453              		.loc 1 154 3 is_stmt 0 discriminator 2 view .LVU129
+ 454              	.LBE69:
+ 455 00a8 3400     		movs	r4, r6
+ 456 00aa 3668     		ldr	r6, [r6]
+ 457              	.LVL43:
+ 458              	.L11:
+ 154:App/lp262_thread.c **** 			fsm_handle_event(&lp262_fsm, event);
+ 459              		.loc 1 154 3 is_stmt 1 discriminator 1 view .LVU130
+ 460 00ac 2500     		movs	r5, r4
+ 461 00ae 6B46     		mov	r3, sp
+ 462 00b0 9C42     		cmp	r4, r3
+ 463 00b2 CCD0     		beq	.L14
+ 155:App/lp262_thread.c **** 
+ 464              		.loc 1 155 4 view .LVU131
+ 465 00b4 2100     		movs	r1, r4
+ 466 00b6 0B48     		ldr	r0, .L15+28
+ 467 00b8 FFF7FEFF 		bl	fsm_handle_event
+ 468              	.LVL44:
+ARM GAS  /tmp/cc9hkaz9.s 			page 15
+
+
+ 157:App/lp262_thread.c ****                 vPortFree(event->param);
+ 469              		.loc 1 157 13 view .LVU132
+ 157:App/lp262_thread.c ****                 vPortFree(event->param);
+ 470              		.loc 1 157 22 is_stmt 0 view .LVU133
+ 471 00bc 2069     		ldr	r0, [r4, #16]
+ 157:App/lp262_thread.c ****                 vPortFree(event->param);
+ 472              		.loc 1 157 16 view .LVU134
+ 473 00be 0028     		cmp	r0, #0
+ 474 00c0 E9D0     		beq	.L12
+ 158:App/lp262_thread.c **** 			list_del(&event->node);
+ 475              		.loc 1 158 17 is_stmt 1 view .LVU135
+ 476 00c2 FFF7FEFF 		bl	vPortFree
+ 477              	.LVL45:
+ 478 00c6 E6E7     		b	.L12
+ 479              	.L16:
+ 480              		.align	2
+ 481              	.L15:
+ 482 00c8 00000000 		.word	debug_mtxHandle
+ 483 00cc 00000000 		.word	debug_buffer
+ 484 00d0 00000000 		.word	.LANCHOR1
+ 485 00d4 00000000 		.word	.LC6
+ 486 00d8 00040050 		.word	1342178304
+ 487 00dc 00000000 		.word	fsm_event_mtxHandle
+ 488 00e0 00000000 		.word	.LANCHOR0
+ 489 00e4 00000000 		.word	.LANCHOR2
+ 490              		.cfi_endproc
+ 491              	.LFE344:
+ 493              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 494              		.align	2
+ 495              	.LC12:
+ 496 0000 6C703236 		.ascii	"lp262\000"
+ 496      3200
+ 497              		.global	lp262_state_entm
+ 498 0006 0000     		.align	2
+ 499              	.LC13:
+ 500 0008 656E746D 		.ascii	"entm\000"
+ 500      00
+ 501              		.global	lp262_state_wait_socket
+ 502 000d 000000   		.align	2
+ 503              	.LC14:
+ 504 0010 77616974 		.ascii	"wait_socket\000"
+ 504      5F736F63 
+ 504      6B657400 
+ 505              		.global	lp262_state_wait_wifi
+ 506              		.align	2
+ 507              	.LC15:
+ 508 001c 77616974 		.ascii	"wait_wifi\000"
+ 508      5F776966 
+ 508      6900
+ 509              		.global	lp262_state_config
+ 510 0026 0000     		.align	2
+ 511              	.LC16:
+ 512 0028 636F6E66 		.ascii	"config\000"
+ 512      696700
+ 513              		.global	lp262_state_power_up
+ 514 002f 00       		.align	2
+ 515              	.LC17:
+ARM GAS  /tmp/cc9hkaz9.s 			page 16
+
+
+ 516 0030 706F7765 		.ascii	"power_up\000"
+ 516      725F7570 
+ 516      00
+ 517              		.global	lp262_state_init
+ 518 0039 000000   		.align	2
+ 519              	.LC18:
+ 520 003c 696E6974 		.ascii	"init\000"
+ 520      00
+ 521              		.section	.bss.lp262_event_list,"aw",%nobits
+ 522              		.align	2
+ 523              		.set	.LANCHOR0,. + 0
+ 526              	lp262_event_list:
+ 527 0000 00000000 		.space	8
+ 527      00000000 
+ 528              		.section	.data.lp262_action_config,"aw"
+ 529              		.align	2
+ 532              	lp262_action_config:
+ 533 0000 00000000 		.word	0
+ 534 0004 00000000 		.word	0
+ 535 0008 00000000 		.word	0
+ 536 000c 00000000 		.word	lp262_state_wait_wifi
+ 537              		.section	.data.lp262_action_entm,"aw"
+ 538              		.align	2
+ 541              	lp262_action_entm:
+ 542 0000 00000000 		.word	0
+ 543 0004 00000000 		.word	0
+ 544 0008 00000000 		.word	0
+ 545 000c 00000000 		.word	lp262_state_init
+ 546              		.section	.data.lp262_action_init,"aw"
+ 547              		.align	2
+ 550              	lp262_action_init:
+ 551 0000 01000000 		.word	1
+ 552 0004 00000000 		.word	0
+ 553 0008 00000000 		.word	0
+ 554 000c 00000000 		.word	lp262_state_power_up
+ 555              		.section	.data.lp262_action_power_up,"aw"
+ 556              		.align	2
+ 559              	lp262_action_power_up:
+ 560 0000 00000000 		.word	0
+ 561 0004 00000000 		.word	0
+ 562 0008 00000000 		.word	0
+ 563 000c 00000000 		.word	lp262_state_config
+ 564              		.section	.data.lp262_action_wait_socket,"aw"
+ 565              		.align	2
+ 568              	lp262_action_wait_socket:
+ 569 0000 00000000 		.word	0
+ 570 0004 00000000 		.word	0
+ 571 0008 00000000 		.word	0
+ 572 000c 00000000 		.word	lp262_state_entm
+ 573              		.section	.data.lp262_action_wait_wifi,"aw"
+ 574              		.align	2
+ 577              	lp262_action_wait_wifi:
+ 578 0000 00000000 		.word	0
+ 579 0004 00000000 		.word	0
+ 580 0008 00000000 		.word	0
+ 581 000c 00000000 		.word	lp262_state_wait_socket
+ 582              		.section	.data.lp262_fsm,"aw"
+ARM GAS  /tmp/cc9hkaz9.s 			page 17
+
+
+ 583              		.align	2
+ 584              		.set	.LANCHOR2,. + 0
+ 587              	lp262_fsm:
+ 588 0000 00000000 		.word	.LC12
+ 589 0004 00000000 		.word	lp262_state_init
+ 590              		.section	.data.lp262_state_config,"aw"
+ 591              		.align	2
+ 594              	lp262_state_config:
+ 595 0000 28000000 		.word	.LC16
+ 596 0004 00000000 		.word	0
+ 597 0008 00000000 		.word	0
+ 598 000c 01000000 		.word	1
+ 599 0010 00000000 		.word	lp262_action_config
+ 600              		.section	.data.lp262_state_entm,"aw"
+ 601              		.align	2
+ 604              	lp262_state_entm:
+ 605 0000 08000000 		.word	.LC13
+ 606 0004 00000000 		.word	0
+ 607 0008 00000000 		.word	0
+ 608 000c 01000000 		.word	1
+ 609 0010 00000000 		.word	lp262_action_entm
+ 610              		.section	.data.lp262_state_init,"aw"
+ 611              		.align	2
+ 614              	lp262_state_init:
+ 615 0000 3C000000 		.word	.LC18
+ 616 0004 00000000 		.word	0
+ 617 0008 00000000 		.word	0
+ 618 000c 01000000 		.word	1
+ 619 0010 00000000 		.word	lp262_action_init
+ 620              		.section	.data.lp262_state_power_up,"aw"
+ 621              		.align	2
+ 624              	lp262_state_power_up:
+ 625 0000 30000000 		.word	.LC17
+ 626 0004 00000000 		.word	0
+ 627 0008 00000000 		.word	0
+ 628 000c 01000000 		.word	1
+ 629 0010 00000000 		.word	lp262_action_power_up
+ 630              		.section	.data.lp262_state_wait_socket,"aw"
+ 631              		.align	2
+ 634              	lp262_state_wait_socket:
+ 635 0000 10000000 		.word	.LC14
+ 636 0004 00000000 		.word	0
+ 637 0008 00000000 		.word	0
+ 638 000c 01000000 		.word	1
+ 639 0010 00000000 		.word	lp262_action_wait_socket
+ 640              		.section	.data.lp262_state_wait_wifi,"aw"
+ 641              		.align	2
+ 644              	lp262_state_wait_wifi:
+ 645 0000 1C000000 		.word	.LC15
+ 646 0004 00000000 		.word	0
+ 647 0008 00000000 		.word	0
+ 648 000c 01000000 		.word	1
+ 649 0010 00000000 		.word	lp262_action_wait_wifi
+ 650              		.section	.rodata.__func__.0,"a"
+ 651              		.align	2
+ 652              		.set	.LANCHOR1,. + 0
+ 655              	__func__.0:
+ARM GAS  /tmp/cc9hkaz9.s 			page 18
+
+
+ 656 0000 6C703236 		.ascii	"lp262_thread_func\000"
+ 656      325F7468 
+ 656      72656164 
+ 656      5F66756E 
+ 656      6300
+ 657              		.text
+ 658              	.Letext0:
+ 659              		.file 3 "/home/yiyu/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/machine/_default_types.h"
+ 660              		.file 4 "/home/yiyu/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/sys/_stdint.h"
+ 661              		.file 5 "Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM0/portmacro.h"
+ 662              		.file 6 "Middlewares/Third_Party/FreeRTOS/Source/include/task.h"
+ 663              		.file 7 "Middlewares/Third_Party/FreeRTOS/Source/include/queue.h"
+ 664              		.file 8 "Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h"
+ 665              		.file 9 "Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h"
+ 666              		.file 10 "Drivers/CMSIS/Device/ST/STM32G0xx/Include/stm32g071xx.h"
+ 667              		.file 11 "App/Include/debug.h"
+ 668              		.file 12 "App/Include/fsm.h"
+ 669              		.file 13 "Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_ll_dma.h"
+ 670              		.file 14 "/home/yiyu/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/stdio.h"
+ 671              		.file 15 "Middlewares/Third_Party/FreeRTOS/Source/include/portable.h"
+ 672              		.file 16 "App/Include/uart_thread.h"
+ 673              		.file 17 "Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_gpio.h"
+ 674              		.file 18 "<built-in>"
+ARM GAS  /tmp/cc9hkaz9.s 			page 19
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 lp262_thread.c
+     /tmp/cc9hkaz9.s:18     .text.lp262_thread_init:0000000000000000 $t
+     /tmp/cc9hkaz9.s:24     .text.lp262_thread_init:0000000000000000 lp262_thread_init
+     /tmp/cc9hkaz9.s:56     .text.lp262_thread_init:0000000000000008 $d
+     /tmp/cc9hkaz9.s:61     .text.lp262_send_event:0000000000000000 $t
+     /tmp/cc9hkaz9.s:67     .text.lp262_send_event:0000000000000000 lp262_send_event
+     /tmp/cc9hkaz9.s:168    .text.lp262_send_event:0000000000000044 $d
+     /tmp/cc9hkaz9.s:175    .text.lp262_hw_reset:0000000000000000 $t
+     /tmp/cc9hkaz9.s:181    .text.lp262_hw_reset:0000000000000000 lp262_hw_reset
+     /tmp/cc9hkaz9.s:195    .rodata.lp262_thread_func.str1.4:0000000000000000 $d
+     /tmp/cc9hkaz9.s:199    .text.lp262_thread_func:0000000000000000 $t
+     /tmp/cc9hkaz9.s:205    .text.lp262_thread_func:0000000000000000 lp262_thread_func
+     /tmp/cc9hkaz9.s:482    .text.lp262_thread_func:00000000000000c8 $d
+     /tmp/cc9hkaz9.s:494    .rodata.str1.4:0000000000000000 $d
+     /tmp/cc9hkaz9.s:604    .data.lp262_state_entm:0000000000000000 lp262_state_entm
+     /tmp/cc9hkaz9.s:634    .data.lp262_state_wait_socket:0000000000000000 lp262_state_wait_socket
+     /tmp/cc9hkaz9.s:644    .data.lp262_state_wait_wifi:0000000000000000 lp262_state_wait_wifi
+     /tmp/cc9hkaz9.s:594    .data.lp262_state_config:0000000000000000 lp262_state_config
+     /tmp/cc9hkaz9.s:624    .data.lp262_state_power_up:0000000000000000 lp262_state_power_up
+     /tmp/cc9hkaz9.s:614    .data.lp262_state_init:0000000000000000 lp262_state_init
+     /tmp/cc9hkaz9.s:522    .bss.lp262_event_list:0000000000000000 $d
+     /tmp/cc9hkaz9.s:526    .bss.lp262_event_list:0000000000000000 lp262_event_list
+     /tmp/cc9hkaz9.s:529    .data.lp262_action_config:0000000000000000 $d
+     /tmp/cc9hkaz9.s:532    .data.lp262_action_config:0000000000000000 lp262_action_config
+     /tmp/cc9hkaz9.s:538    .data.lp262_action_entm:0000000000000000 $d
+     /tmp/cc9hkaz9.s:541    .data.lp262_action_entm:0000000000000000 lp262_action_entm
+     /tmp/cc9hkaz9.s:547    .data.lp262_action_init:0000000000000000 $d
+     /tmp/cc9hkaz9.s:550    .data.lp262_action_init:0000000000000000 lp262_action_init
+     /tmp/cc9hkaz9.s:556    .data.lp262_action_power_up:0000000000000000 $d
+     /tmp/cc9hkaz9.s:559    .data.lp262_action_power_up:0000000000000000 lp262_action_power_up
+     /tmp/cc9hkaz9.s:565    .data.lp262_action_wait_socket:0000000000000000 $d
+     /tmp/cc9hkaz9.s:568    .data.lp262_action_wait_socket:0000000000000000 lp262_action_wait_socket
+     /tmp/cc9hkaz9.s:574    .data.lp262_action_wait_wifi:0000000000000000 $d
+     /tmp/cc9hkaz9.s:577    .data.lp262_action_wait_wifi:0000000000000000 lp262_action_wait_wifi
+     /tmp/cc9hkaz9.s:583    .data.lp262_fsm:0000000000000000 $d
+     /tmp/cc9hkaz9.s:587    .data.lp262_fsm:0000000000000000 lp262_fsm
+     /tmp/cc9hkaz9.s:591    .data.lp262_state_config:0000000000000000 $d
+     /tmp/cc9hkaz9.s:601    .data.lp262_state_entm:0000000000000000 $d
+     /tmp/cc9hkaz9.s:611    .data.lp262_state_init:0000000000000000 $d
+     /tmp/cc9hkaz9.s:621    .data.lp262_state_power_up:0000000000000000 $d
+     /tmp/cc9hkaz9.s:631    .data.lp262_state_wait_socket:0000000000000000 $d
+     /tmp/cc9hkaz9.s:641    .data.lp262_state_wait_wifi:0000000000000000 $d
+     /tmp/cc9hkaz9.s:651    .rodata.__func__.0:0000000000000000 $d
+     /tmp/cc9hkaz9.s:655    .rodata.__func__.0:0000000000000000 __func__.0
+
+UNDEFINED SYMBOLS
+pvPortMalloc
+osMutexWait
+osMutexRelease
+xTaskGenericNotify
+fsm_event_mtxHandle
+lp262_threadHandle
+snprintf
+memcpy
+uart4_send
+vPortFree
+ARM GAS  /tmp/cc9hkaz9.s 			page 20
+
+
+ulTaskNotifyTake
+HAL_GPIO_TogglePin
+fsm_handle_event
+debug_mtxHandle
+debug_buffer

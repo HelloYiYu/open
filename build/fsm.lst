@@ -1,0 +1,340 @@
+ARM GAS  /tmp/ccUcxGbr.s 			page 1
+
+
+   1              		.cpu cortex-m0plus
+   2              		.arch armv6s-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 0
+  12              		.eabi_attribute 18, 4
+  13              		.file	"fsm.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.is_event_match,"ax",%progbits
+  18              		.align	1
+  19              		.global	is_event_match
+  20              		.syntax unified
+  21              		.code	16
+  22              		.thumb_func
+  24              	is_event_match:
+  25              	.LVL0:
+  26              	.LFB11:
+  27              		.file 1 "App/fsm.c"
+   1:App/fsm.c     **** #include "fsm.h"
+   2:App/fsm.c     **** 
+   3:App/fsm.c     **** uint32_t is_event_match(struct FSM_EVENT *event, struct FSM_ACTION *action)
+   4:App/fsm.c     **** {
+  28              		.loc 1 4 1 view -0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32              		@ link register save eliminated.
+   5:App/fsm.c     ****     uint32_t ret = 0;
+  33              		.loc 1 5 5 view .LVU1
+   6:App/fsm.c     **** 
+   7:App/fsm.c     ****     if (event == NULL || action == NULL)
+  34              		.loc 1 7 5 view .LVU2
+  35              		.loc 1 7 8 is_stmt 0 view .LVU3
+  36 0000 0028     		cmp	r0, #0
+  37 0002 07D0     		beq	.L3
+  38              		.loc 1 7 23 discriminator 1 view .LVU4
+  39 0004 0029     		cmp	r1, #0
+  40 0006 07D0     		beq	.L4
+   8:App/fsm.c     ****         return ret;
+   9:App/fsm.c     **** 
+  10:App/fsm.c     ****     if (event->event_id == action->event_id)
+  41              		.loc 1 10 5 is_stmt 1 view .LVU5
+  42              		.loc 1 10 14 is_stmt 0 view .LVU6
+  43 0008 8268     		ldr	r2, [r0, #8]
+  44              		.loc 1 10 34 view .LVU7
+  45 000a 0B68     		ldr	r3, [r1]
+  46              		.loc 1 10 8 view .LVU8
+  47 000c 9A42     		cmp	r2, r3
+  48 000e 05D0     		beq	.L5
+ARM GAS  /tmp/ccUcxGbr.s 			page 2
+
+
+   5:App/fsm.c     **** 
+  49              		.loc 1 5 14 view .LVU9
+  50 0010 0020     		movs	r0, #0
+  51              	.LVL1:
+  52              	.L1:
+  11:App/fsm.c     ****         ret = 1;
+  12:App/fsm.c     **** 
+  13:App/fsm.c     ****     return ret;
+  14:App/fsm.c     **** }
+  53              		.loc 1 14 1 view .LVU10
+  54              		@ sp needed
+  55 0012 7047     		bx	lr
+  56              	.LVL2:
+  57              	.L3:
+   8:App/fsm.c     **** 
+  58              		.loc 1 8 16 view .LVU11
+  59 0014 0020     		movs	r0, #0
+  60              	.LVL3:
+   8:App/fsm.c     **** 
+  61              		.loc 1 8 16 view .LVU12
+  62 0016 FCE7     		b	.L1
+  63              	.LVL4:
+  64              	.L4:
+   8:App/fsm.c     **** 
+  65              		.loc 1 8 16 view .LVU13
+  66 0018 0020     		movs	r0, #0
+  67              	.LVL5:
+   8:App/fsm.c     **** 
+  68              		.loc 1 8 16 view .LVU14
+  69 001a FAE7     		b	.L1
+  70              	.LVL6:
+  71              	.L5:
+  11:App/fsm.c     ****         ret = 1;
+  72              		.loc 1 11 13 view .LVU15
+  73 001c 0120     		movs	r0, #1
+  74              	.LVL7:
+  11:App/fsm.c     ****         ret = 1;
+  75              		.loc 1 11 13 view .LVU16
+  76 001e F8E7     		b	.L1
+  77              		.cfi_endproc
+  78              	.LFE11:
+  80              		.section	.text.fsm_handle_event,"ax",%progbits
+  81              		.align	1
+  82              		.global	fsm_handle_event
+  83              		.syntax unified
+  84              		.code	16
+  85              		.thumb_func
+  87              	fsm_handle_event:
+  88              	.LVL8:
+  89              	.LFB12:
+  15:App/fsm.c     **** 
+  16:App/fsm.c     **** void fsm_handle_event(struct FSM_ENTITY *fsm, struct FSM_EVENT *event)
+  17:App/fsm.c     **** {
+  90              		.loc 1 17 1 is_stmt 1 view -0
+  91              		.cfi_startproc
+  92              		@ args = 0, pretend = 0, frame = 0
+  93              		@ frame_needed = 0, uses_anonymous_args = 0
+ARM GAS  /tmp/ccUcxGbr.s 			page 3
+
+
+  94              		.loc 1 17 1 is_stmt 0 view .LVU18
+  95 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+  96              	.LCFI0:
+  97              		.cfi_def_cfa_offset 24
+  98              		.cfi_offset 3, -24
+  99              		.cfi_offset 4, -20
+ 100              		.cfi_offset 5, -16
+ 101              		.cfi_offset 6, -12
+ 102              		.cfi_offset 7, -8
+ 103              		.cfi_offset 14, -4
+ 104 0002 0400     		movs	r4, r0
+ 105 0004 0D00     		movs	r5, r1
+  18:App/fsm.c     ****     struct FSM_STATE *current_state, *next_state;
+ 106              		.loc 1 18 5 is_stmt 1 view .LVU19
+  19:App/fsm.c     ****     struct FSM_ACTION *current_action;
+ 107              		.loc 1 19 5 view .LVU20
+  20:App/fsm.c     ****     int i;
+ 108              		.loc 1 20 5 view .LVU21
+  21:App/fsm.c     **** 
+  22:App/fsm.c     ****     if ((fsm == NULL) || (fsm->name == NULL) || (fsm->state = NULL))
+ 109              		.loc 1 22 5 view .LVU22
+ 110              		.loc 1 22 8 is_stmt 0 view .LVU23
+ 111 0006 0028     		cmp	r0, #0
+ 112 0008 3FD0     		beq	.L6
+ 113              		.loc 1 22 23 discriminator 1 view .LVU24
+ 114 000a 0368     		ldr	r3, [r0]
+ 115 000c 002B     		cmp	r3, #0
+ 116 000e 3CD0     		beq	.L6
+ 117              		.loc 1 22 61 discriminator 2 view .LVU25
+ 118 0010 0023     		movs	r3, #0
+ 119 0012 4360     		str	r3, [r0, #4]
+  23:App/fsm.c     ****         return;
+  24:App/fsm.c     **** 
+  25:App/fsm.c     ****     current_state = fsm->state;
+ 120              		.loc 1 25 5 is_stmt 1 discriminator 2 view .LVU26
+ 121              	.LVL9:
+  26:App/fsm.c     ****     if ((current_state->name == NULL) ||
+ 122              		.loc 1 26 5 discriminator 2 view .LVU27
+ 123              		.loc 1 26 23 is_stmt 0 discriminator 2 view .LVU28
+ 124 0014 1B68     		ldr	r3, [r3]
+ 125              		.loc 1 26 8 discriminator 2 view .LVU29
+ 126 0016 002B     		cmp	r3, #0
+ 127 0018 37D0     		beq	.L6
+  27:App/fsm.c     ****         (current_state->action_list_count == 0) ||
+ 128              		.loc 1 27 23 discriminator 1 view .LVU30
+ 129 001a 0023     		movs	r3, #0
+ 130 001c DB68     		ldr	r3, [r3, #12]
+  26:App/fsm.c     ****     if ((current_state->name == NULL) ||
+ 131              		.loc 1 26 39 discriminator 1 view .LVU31
+ 132 001e 002B     		cmp	r3, #0
+ 133 0020 33D0     		beq	.L6
+  28:App/fsm.c     ****         (current_state->action_list == NULL))
+ 134              		.loc 1 28 23 view .LVU32
+ 135 0022 0023     		movs	r3, #0
+ 136 0024 1B69     		ldr	r3, [r3, #16]
+  27:App/fsm.c     ****         (current_state->action_list_count == 0) ||
+ 137              		.loc 1 27 49 view .LVU33
+ARM GAS  /tmp/ccUcxGbr.s 			page 4
+
+
+ 138 0026 002B     		cmp	r3, #0
+ 139 0028 2FD0     		beq	.L6
+  29:App/fsm.c     ****         return;
+  30:App/fsm.c     ****     
+  31:App/fsm.c     ****     for (i = 0; i < current_state->action_list_count; i++) {
+ 140              		.loc 1 31 12 view .LVU34
+ 141 002a 0027     		movs	r7, #0
+ 142 002c 00E0     		b	.L8
+ 143              	.LVL10:
+ 144              	.L9:
+ 145              		.loc 1 31 55 is_stmt 1 discriminator 2 view .LVU35
+ 146              		.loc 1 31 56 is_stmt 0 discriminator 2 view .LVU36
+ 147 002e 0137     		adds	r7, r7, #1
+ 148              	.LVL11:
+ 149              	.L8:
+ 150              		.loc 1 31 17 is_stmt 1 discriminator 1 view .LVU37
+ 151              		.loc 1 31 34 is_stmt 0 discriminator 1 view .LVU38
+ 152 0030 0023     		movs	r3, #0
+ 153 0032 DB68     		ldr	r3, [r3, #12]
+ 154              		.loc 1 31 5 discriminator 1 view .LVU39
+ 155 0034 BB42     		cmp	r3, r7
+ 156 0036 28D9     		bls	.L6
+  32:App/fsm.c     ****         current_action = &current_state->action_list[i];
+ 157              		.loc 1 32 9 is_stmt 1 view .LVU40
+ 158              		.loc 1 32 40 is_stmt 0 view .LVU41
+ 159 0038 0023     		movs	r3, #0
+ 160 003a 1E69     		ldr	r6, [r3, #16]
+ 161              		.loc 1 32 53 view .LVU42
+ 162 003c 3B01     		lsls	r3, r7, #4
+ 163              		.loc 1 32 24 view .LVU43
+ 164 003e F618     		adds	r6, r6, r3
+ 165              	.LVL12:
+  33:App/fsm.c     ****         if (is_event_match(event, current_action)) {
+ 166              		.loc 1 33 9 is_stmt 1 view .LVU44
+ 167              		.loc 1 33 13 is_stmt 0 view .LVU45
+ 168 0040 3100     		movs	r1, r6
+ 169 0042 2800     		movs	r0, r5
+ 170 0044 FFF7FEFF 		bl	is_event_match
+ 171              	.LVL13:
+ 172              		.loc 1 33 12 view .LVU46
+ 173 0048 0028     		cmp	r0, #0
+ 174 004a F0D0     		beq	.L9
+  34:App/fsm.c     ****             if (current_action->guard_func)
+ 175              		.loc 1 34 13 is_stmt 1 view .LVU47
+ 176              		.loc 1 34 31 is_stmt 0 view .LVU48
+ 177 004c 7368     		ldr	r3, [r6, #4]
+ 178              		.loc 1 34 16 view .LVU49
+ 179 004e 002B     		cmp	r3, #0
+ 180 0050 04D0     		beq	.L10
+  35:App/fsm.c     ****                 if (!current_action->guard_func(fsm, event))
+ 181              		.loc 1 35 17 is_stmt 1 view .LVU50
+ 182              		.loc 1 35 22 is_stmt 0 view .LVU51
+ 183 0052 2900     		movs	r1, r5
+ 184 0054 2000     		movs	r0, r4
+ 185 0056 9847     		blx	r3
+ 186              	.LVL14:
+ 187              		.loc 1 35 20 view .LVU52
+ARM GAS  /tmp/ccUcxGbr.s 			page 5
+
+
+ 188 0058 0028     		cmp	r0, #0
+ 189 005a E8D0     		beq	.L9
+ 190              	.L10:
+  36:App/fsm.c     ****                     continue;
+  37:App/fsm.c     **** 
+  38:App/fsm.c     ****             if (current_action->action_func)
+ 191              		.loc 1 38 13 is_stmt 1 view .LVU53
+ 192              		.loc 1 38 31 is_stmt 0 view .LVU54
+ 193 005c B368     		ldr	r3, [r6, #8]
+ 194              		.loc 1 38 16 view .LVU55
+ 195 005e 002B     		cmp	r3, #0
+ 196 0060 02D0     		beq	.L11
+  39:App/fsm.c     ****                 current_action->action_func(fsm, event);
+ 197              		.loc 1 39 17 is_stmt 1 view .LVU56
+ 198 0062 2900     		movs	r1, r5
+ 199 0064 2000     		movs	r0, r4
+ 200 0066 9847     		blx	r3
+ 201              	.LVL15:
+ 202              	.L11:
+  40:App/fsm.c     **** 
+  41:App/fsm.c     ****             next_state = current_action->next_state;
+ 203              		.loc 1 41 13 view .LVU57
+ 204              		.loc 1 41 24 is_stmt 0 view .LVU58
+ 205 0068 F568     		ldr	r5, [r6, #12]
+ 206              	.LVL16:
+  42:App/fsm.c     ****             if ((next_state != NULL) && (next_state != current_state)) {
+ 207              		.loc 1 42 13 is_stmt 1 view .LVU59
+ 208              		.loc 1 42 16 is_stmt 0 view .LVU60
+ 209 006a 002D     		cmp	r5, #0
+ 210 006c 0DD0     		beq	.L6
+  43:App/fsm.c     ****                 if (current_state->leave_func)
+ 211              		.loc 1 43 17 is_stmt 1 view .LVU61
+ 212              		.loc 1 43 34 is_stmt 0 view .LVU62
+ 213 006e 0023     		movs	r3, #0
+ 214 0070 9B68     		ldr	r3, [r3, #8]
+ 215              		.loc 1 43 20 view .LVU63
+ 216 0072 002B     		cmp	r3, #0
+ 217 0074 02D0     		beq	.L12
+  44:App/fsm.c     ****                     current_state->leave_func(fsm, next_state);
+ 218              		.loc 1 44 21 is_stmt 1 view .LVU64
+ 219 0076 2900     		movs	r1, r5
+ 220 0078 2000     		movs	r0, r4
+ 221 007a 9847     		blx	r3
+ 222              	.LVL17:
+ 223              	.L12:
+  45:App/fsm.c     **** 
+  46:App/fsm.c     ****                 fsm->state = next_state;
+ 224              		.loc 1 46 17 view .LVU65
+ 225              		.loc 1 46 28 is_stmt 0 view .LVU66
+ 226 007c 6560     		str	r5, [r4, #4]
+  47:App/fsm.c     ****                 
+  48:App/fsm.c     ****                 if (next_state->enter_func)
+ 227              		.loc 1 48 17 is_stmt 1 view .LVU67
+ 228              		.loc 1 48 31 is_stmt 0 view .LVU68
+ 229 007e 6B68     		ldr	r3, [r5, #4]
+ 230              		.loc 1 48 20 view .LVU69
+ 231 0080 002B     		cmp	r3, #0
+ARM GAS  /tmp/ccUcxGbr.s 			page 6
+
+
+ 232 0082 02D0     		beq	.L6
+  49:App/fsm.c     ****                     next_state->enter_func(fsm, current_state);
+ 233              		.loc 1 49 21 is_stmt 1 view .LVU70
+ 234 0084 0021     		movs	r1, #0
+ 235 0086 2000     		movs	r0, r4
+ 236 0088 9847     		blx	r3
+ 237              	.LVL18:
+ 238              	.L6:
+  50:App/fsm.c     ****             }
+  51:App/fsm.c     ****             break;
+  52:App/fsm.c     ****         }
+  53:App/fsm.c     ****     } 
+  54:App/fsm.c     **** }...
+ 239              		.loc 1 54 1 is_stmt 0 view .LVU71
+ 240              		@ sp needed
+ 241              	.LVL19:
+ 242              		.loc 1 54 1 view .LVU72
+ 243 008a F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 244              		.cfi_endproc
+ 245              	.LFE12:
+ 247              		.text
+ 248              	.Letext0:
+ 249              		.file 2 "/home/yiyu/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/machine/_default_types.h"
+ 250              		.file 3 "/home/yiyu/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/sys/_stdint.h"
+ 251              		.file 4 "App/Include/my_list.h"
+ 252              		.file 5 "App/Include/fsm.h"
+ARM GAS  /tmp/ccUcxGbr.s 			page 7
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 fsm.c
+     /tmp/ccUcxGbr.s:18     .text.is_event_match:0000000000000000 $t
+     /tmp/ccUcxGbr.s:24     .text.is_event_match:0000000000000000 is_event_match
+     /tmp/ccUcxGbr.s:81     .text.fsm_handle_event:0000000000000000 $t
+     /tmp/ccUcxGbr.s:87     .text.fsm_handle_event:0000000000000000 fsm_handle_event
+
+NO UNDEFINED SYMBOLS

@@ -1,0 +1,790 @@
+ARM GAS  /tmp/ccH7xXRT.s 			page 1
+
+
+   1              		.cpu cortex-m0plus
+   2              		.arch armv6s-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 0
+  12              		.eabi_attribute 18, 4
+  13              		.file	"app_freertos.c"
+  14              		.section	.rodata.str1.4,"aMS",%progbits,1
+  15              		.align	2
+  16              	.LC0:
+  17 0000 64656661 		.ascii	"default_thread\000"
+  17      756C745F 
+  17      74687265 
+  17      616400
+  18 000f 00       		.align	2
+  19              	.LC2:
+  20 0010 6D61696E 		.ascii	"main_thread\000"
+  20      5F746872 
+  20      65616400 
+  21              		.align	2
+  22              	.LC4:
+  23 001c 6C703236 		.ascii	"lp262_thread\000"
+  23      325F7468 
+  23      72656164 
+  23      00
+  24 0029 000000   		.align	2
+  25              	.LC6:
+  26 002c 75617274 		.ascii	"uart_thread\000"
+  26      5F746872 
+  26      65616400 
+  27              		.text
+  28              	.Ltext0:
+  29              		.cfi_sections	.debug_frame
+  30              		.section	.text.default_thread_func,"ax",%progbits
+  31              		.align	1
+  32              		.global	default_thread_func
+  33              		.syntax unified
+  34              		.code	16
+  35              		.thumb_func
+  37              	default_thread_func:
+  38              	.LFB329:
+  39              		.file 1 "Core/Src/app_freertos.c"
+   1:Core/Src/app_freertos.c **** /* USER CODE BEGIN Header */
+   2:Core/Src/app_freertos.c **** /**
+   3:Core/Src/app_freertos.c ****   ******************************************************************************
+   4:Core/Src/app_freertos.c ****   * File Name          : app_freertos.c
+   5:Core/Src/app_freertos.c ****   * Description        : Code for freertos applications
+   6:Core/Src/app_freertos.c ****   ******************************************************************************
+   7:Core/Src/app_freertos.c ****   * @attention
+   8:Core/Src/app_freertos.c ****   *
+   9:Core/Src/app_freertos.c ****   * Copyright (c) 2024 STMicroelectronics.
+ARM GAS  /tmp/ccH7xXRT.s 			page 2
+
+
+  10:Core/Src/app_freertos.c ****   * All rights reserved.
+  11:Core/Src/app_freertos.c ****   *
+  12:Core/Src/app_freertos.c ****   * This software is licensed under terms that can be found in the LICENSE file
+  13:Core/Src/app_freertos.c ****   * in the root directory of this software component.
+  14:Core/Src/app_freertos.c ****   * If no LICENSE file comes with this software, it is provided AS-IS.
+  15:Core/Src/app_freertos.c ****   *
+  16:Core/Src/app_freertos.c ****   ******************************************************************************
+  17:Core/Src/app_freertos.c ****   */
+  18:Core/Src/app_freertos.c **** /* USER CODE END Header */
+  19:Core/Src/app_freertos.c **** 
+  20:Core/Src/app_freertos.c **** /* Includes ------------------------------------------------------------------*/
+  21:Core/Src/app_freertos.c **** #include "FreeRTOS.h"
+  22:Core/Src/app_freertos.c **** #include "task.h"
+  23:Core/Src/app_freertos.c **** #include "main.h"
+  24:Core/Src/app_freertos.c **** #include "cmsis_os.h"
+  25:Core/Src/app_freertos.c **** 
+  26:Core/Src/app_freertos.c **** /* Private includes ----------------------------------------------------------*/
+  27:Core/Src/app_freertos.c **** /* USER CODE BEGIN Includes */
+  28:Core/Src/app_freertos.c **** 
+  29:Core/Src/app_freertos.c **** /* USER CODE END Includes */
+  30:Core/Src/app_freertos.c **** 
+  31:Core/Src/app_freertos.c **** /* Private typedef -----------------------------------------------------------*/
+  32:Core/Src/app_freertos.c **** /* USER CODE BEGIN PTD */
+  33:Core/Src/app_freertos.c **** 
+  34:Core/Src/app_freertos.c **** /* USER CODE END PTD */
+  35:Core/Src/app_freertos.c **** 
+  36:Core/Src/app_freertos.c **** /* Private define ------------------------------------------------------------*/
+  37:Core/Src/app_freertos.c **** /* USER CODE BEGIN PD */
+  38:Core/Src/app_freertos.c **** 
+  39:Core/Src/app_freertos.c **** /* USER CODE END PD */
+  40:Core/Src/app_freertos.c **** 
+  41:Core/Src/app_freertos.c **** /* Private macro -------------------------------------------------------------*/
+  42:Core/Src/app_freertos.c **** /* USER CODE BEGIN PM */
+  43:Core/Src/app_freertos.c **** 
+  44:Core/Src/app_freertos.c **** /* USER CODE END PM */
+  45:Core/Src/app_freertos.c **** 
+  46:Core/Src/app_freertos.c **** /* Private variables ---------------------------------------------------------*/
+  47:Core/Src/app_freertos.c **** /* USER CODE BEGIN Variables */
+  48:Core/Src/app_freertos.c **** 
+  49:Core/Src/app_freertos.c **** /* USER CODE END Variables */
+  50:Core/Src/app_freertos.c **** osThreadId default_threadHandle;
+  51:Core/Src/app_freertos.c **** osThreadId main_threadHandle;
+  52:Core/Src/app_freertos.c **** osThreadId lp262_threadHandle;
+  53:Core/Src/app_freertos.c **** osThreadId uart_threadHandle;
+  54:Core/Src/app_freertos.c **** osMutexId fsm_event_mtxHandle;
+  55:Core/Src/app_freertos.c **** osMutexId uart1_mtxHandle;
+  56:Core/Src/app_freertos.c **** osMutexId uart2_mtxHandle;
+  57:Core/Src/app_freertos.c **** osMutexId uart3_mtxHandle;
+  58:Core/Src/app_freertos.c **** osMutexId uart4_mtxHandle;
+  59:Core/Src/app_freertos.c **** osSemaphoreId uart1_send_semHandle;
+  60:Core/Src/app_freertos.c **** osSemaphoreId uart2_send_semHandle;
+  61:Core/Src/app_freertos.c **** osSemaphoreId uart3_send_semHandle;
+  62:Core/Src/app_freertos.c **** osSemaphoreId uart4_send_semHandle;
+  63:Core/Src/app_freertos.c **** 
+  64:Core/Src/app_freertos.c **** /* Private function prototypes -----------------------------------------------*/
+  65:Core/Src/app_freertos.c **** /* USER CODE BEGIN FunctionPrototypes */
+  66:Core/Src/app_freertos.c **** extern void lp262_thread_init(void);
+ARM GAS  /tmp/ccH7xXRT.s 			page 3
+
+
+  67:Core/Src/app_freertos.c **** extern void uart_thread_init(void);
+  68:Core/Src/app_freertos.c **** extern void main_thread_init(void);
+  69:Core/Src/app_freertos.c **** extern void debug_init(void);
+  70:Core/Src/app_freertos.c **** /* USER CODE END FunctionPrototypes */
+  71:Core/Src/app_freertos.c **** 
+  72:Core/Src/app_freertos.c **** void default_thread_func(void const * argument);
+  73:Core/Src/app_freertos.c **** extern void main_thread_func(void const * argument);
+  74:Core/Src/app_freertos.c **** extern void lp262_thread_func(void const * argument);
+  75:Core/Src/app_freertos.c **** extern void uart_thread_func(void const * argument);
+  76:Core/Src/app_freertos.c **** 
+  77:Core/Src/app_freertos.c **** void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
+  78:Core/Src/app_freertos.c **** 
+  79:Core/Src/app_freertos.c **** /* Hook prototypes */
+  80:Core/Src/app_freertos.c **** void vApplicationStackOverflowHook(TaskHandle_t xTask, signed char *pcTaskName);
+  81:Core/Src/app_freertos.c **** 
+  82:Core/Src/app_freertos.c **** /* USER CODE BEGIN 4 */
+  83:Core/Src/app_freertos.c **** __weak void vApplicationStackOverflowHook(TaskHandle_t xTask, signed char *pcTaskName)
+  84:Core/Src/app_freertos.c **** {
+  85:Core/Src/app_freertos.c ****    /* Run time stack overflow checking is performed if
+  86:Core/Src/app_freertos.c ****    configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2. This hook function is
+  87:Core/Src/app_freertos.c ****    called if a stack overflow is detected. */
+  88:Core/Src/app_freertos.c **** }
+  89:Core/Src/app_freertos.c **** /* USER CODE END 4 */
+  90:Core/Src/app_freertos.c **** 
+  91:Core/Src/app_freertos.c **** /**
+  92:Core/Src/app_freertos.c ****   * @brief  FreeRTOS initialization
+  93:Core/Src/app_freertos.c ****   * @param  None
+  94:Core/Src/app_freertos.c ****   * @retval None
+  95:Core/Src/app_freertos.c ****   */
+  96:Core/Src/app_freertos.c **** void MX_FREERTOS_Init(void) {
+  97:Core/Src/app_freertos.c ****   /* USER CODE BEGIN Init */
+  98:Core/Src/app_freertos.c ****   lp262_thread_init();
+  99:Core/Src/app_freertos.c ****   uart_thread_init();
+ 100:Core/Src/app_freertos.c ****   main_thread_init();
+ 101:Core/Src/app_freertos.c ****   // keep debug init at the last
+ 102:Core/Src/app_freertos.c ****   debug_init();
+ 103:Core/Src/app_freertos.c ****   /* USER CODE END Init */
+ 104:Core/Src/app_freertos.c ****   /* Create the mutex(es) */
+ 105:Core/Src/app_freertos.c ****   /* definition and creation of fsm_event_mtx */
+ 106:Core/Src/app_freertos.c ****   osMutexDef(fsm_event_mtx);
+ 107:Core/Src/app_freertos.c ****   fsm_event_mtxHandle = osMutexCreate(osMutex(fsm_event_mtx));
+ 108:Core/Src/app_freertos.c **** 
+ 109:Core/Src/app_freertos.c ****   /* definition and creation of uart1_mtx */
+ 110:Core/Src/app_freertos.c ****   osMutexDef(uart1_mtx);
+ 111:Core/Src/app_freertos.c ****   uart1_mtxHandle = osMutexCreate(osMutex(uart1_mtx));
+ 112:Core/Src/app_freertos.c **** 
+ 113:Core/Src/app_freertos.c ****   /* definition and creation of uart2_mtx */
+ 114:Core/Src/app_freertos.c ****   osMutexDef(uart2_mtx);
+ 115:Core/Src/app_freertos.c ****   uart2_mtxHandle = osMutexCreate(osMutex(uart2_mtx));
+ 116:Core/Src/app_freertos.c **** 
+ 117:Core/Src/app_freertos.c ****   /* definition and creation of uart3_mtx */
+ 118:Core/Src/app_freertos.c ****   osMutexDef(uart3_mtx);
+ 119:Core/Src/app_freertos.c ****   uart3_mtxHandle = osMutexCreate(osMutex(uart3_mtx));
+ 120:Core/Src/app_freertos.c **** 
+ 121:Core/Src/app_freertos.c ****   /* definition and creation of uart4_mtx */
+ 122:Core/Src/app_freertos.c ****   osMutexDef(uart4_mtx);
+ 123:Core/Src/app_freertos.c ****   uart4_mtxHandle = osMutexCreate(osMutex(uart4_mtx));
+ARM GAS  /tmp/ccH7xXRT.s 			page 4
+
+
+ 124:Core/Src/app_freertos.c **** 
+ 125:Core/Src/app_freertos.c ****   /* USER CODE BEGIN RTOS_MUTEX */
+ 126:Core/Src/app_freertos.c ****   /* add mutexes, ... */
+ 127:Core/Src/app_freertos.c ****   /* USER CODE END RTOS_MUTEX */
+ 128:Core/Src/app_freertos.c **** 
+ 129:Core/Src/app_freertos.c ****   /* Create the semaphores(s) */
+ 130:Core/Src/app_freertos.c ****   /* definition and creation of uart1_send_sem */
+ 131:Core/Src/app_freertos.c ****   osSemaphoreDef(uart1_send_sem);
+ 132:Core/Src/app_freertos.c ****   uart1_send_semHandle = osSemaphoreCreate(osSemaphore(uart1_send_sem), 1);
+ 133:Core/Src/app_freertos.c **** 
+ 134:Core/Src/app_freertos.c ****   /* definition and creation of uart2_send_sem */
+ 135:Core/Src/app_freertos.c ****   osSemaphoreDef(uart2_send_sem);
+ 136:Core/Src/app_freertos.c ****   uart2_send_semHandle = osSemaphoreCreate(osSemaphore(uart2_send_sem), 1);
+ 137:Core/Src/app_freertos.c **** 
+ 138:Core/Src/app_freertos.c ****   /* definition and creation of uart3_send_sem */
+ 139:Core/Src/app_freertos.c ****   osSemaphoreDef(uart3_send_sem);
+ 140:Core/Src/app_freertos.c ****   uart3_send_semHandle = osSemaphoreCreate(osSemaphore(uart3_send_sem), 1);
+ 141:Core/Src/app_freertos.c **** 
+ 142:Core/Src/app_freertos.c ****   /* definition and creation of uart4_send_sem */
+ 143:Core/Src/app_freertos.c ****   osSemaphoreDef(uart4_send_sem);
+ 144:Core/Src/app_freertos.c ****   uart4_send_semHandle = osSemaphoreCreate(osSemaphore(uart4_send_sem), 1);
+ 145:Core/Src/app_freertos.c **** 
+ 146:Core/Src/app_freertos.c ****   /* USER CODE BEGIN RTOS_SEMAPHORES */
+ 147:Core/Src/app_freertos.c ****   /* add semaphores, ... */
+ 148:Core/Src/app_freertos.c ****   /* USER CODE END RTOS_SEMAPHORES */
+ 149:Core/Src/app_freertos.c **** 
+ 150:Core/Src/app_freertos.c ****   /* USER CODE BEGIN RTOS_TIMERS */
+ 151:Core/Src/app_freertos.c ****   /* start timers, add new ones, ... */
+ 152:Core/Src/app_freertos.c ****   /* USER CODE END RTOS_TIMERS */
+ 153:Core/Src/app_freertos.c **** 
+ 154:Core/Src/app_freertos.c ****   /* USER CODE BEGIN RTOS_QUEUES */
+ 155:Core/Src/app_freertos.c ****   /* add queues, ... */
+ 156:Core/Src/app_freertos.c ****   /* USER CODE END RTOS_QUEUES */
+ 157:Core/Src/app_freertos.c **** 
+ 158:Core/Src/app_freertos.c ****   /* Create the thread(s) */
+ 159:Core/Src/app_freertos.c ****   /* definition and creation of default_thread */
+ 160:Core/Src/app_freertos.c ****   osThreadDef(default_thread, default_thread_func, osPriorityIdle, 0, 128);
+ 161:Core/Src/app_freertos.c ****   default_threadHandle = osThreadCreate(osThread(default_thread), NULL);
+ 162:Core/Src/app_freertos.c **** 
+ 163:Core/Src/app_freertos.c ****   /* definition and creation of main_thread */
+ 164:Core/Src/app_freertos.c ****   osThreadDef(main_thread, main_thread_func, osPriorityNormal, 0, 128);
+ 165:Core/Src/app_freertos.c ****   main_threadHandle = osThreadCreate(osThread(main_thread), NULL);
+ 166:Core/Src/app_freertos.c **** 
+ 167:Core/Src/app_freertos.c ****   /* definition and creation of lp262_thread */
+ 168:Core/Src/app_freertos.c ****   osThreadDef(lp262_thread, lp262_thread_func, osPriorityNormal, 0, 128);
+ 169:Core/Src/app_freertos.c ****   lp262_threadHandle = osThreadCreate(osThread(lp262_thread), NULL);
+ 170:Core/Src/app_freertos.c **** 
+ 171:Core/Src/app_freertos.c ****   /* definition and creation of uart_thread */
+ 172:Core/Src/app_freertos.c ****   osThreadDef(uart_thread, uart_thread_func, osPriorityRealtime, 0, 128);
+ 173:Core/Src/app_freertos.c ****   uart_threadHandle = osThreadCreate(osThread(uart_thread), NULL);
+ 174:Core/Src/app_freertos.c **** 
+ 175:Core/Src/app_freertos.c ****   /* USER CODE BEGIN RTOS_THREADS */
+ 176:Core/Src/app_freertos.c ****   /* add threads, ... */
+ 177:Core/Src/app_freertos.c ****   /* USER CODE END RTOS_THREADS */
+ 178:Core/Src/app_freertos.c **** 
+ 179:Core/Src/app_freertos.c **** }
+ 180:Core/Src/app_freertos.c **** 
+ARM GAS  /tmp/ccH7xXRT.s 			page 5
+
+
+ 181:Core/Src/app_freertos.c **** /* USER CODE BEGIN Header_default_thread_func */
+ 182:Core/Src/app_freertos.c **** /**
+ 183:Core/Src/app_freertos.c ****   * @brief  Function implementing the default_thread thread.
+ 184:Core/Src/app_freertos.c ****   * @param  argument: Not used
+ 185:Core/Src/app_freertos.c ****   * @retval None
+ 186:Core/Src/app_freertos.c ****   */
+ 187:Core/Src/app_freertos.c **** /* USER CODE END Header_default_thread_func */
+ 188:Core/Src/app_freertos.c **** void default_thread_func(void const * argument)
+ 189:Core/Src/app_freertos.c **** {
+  40              		.loc 1 189 1 view -0
+  41              		.cfi_startproc
+  42              		@ Volatile: function does not return.
+  43              		@ args = 0, pretend = 0, frame = 0
+  44              		@ frame_needed = 0, uses_anonymous_args = 0
+  45              	.LVL0:
+  46              		.loc 1 189 1 is_stmt 0 view .LVU1
+  47 0000 10B5     		push	{r4, lr}
+  48              	.LCFI0:
+  49              		.cfi_def_cfa_offset 8
+  50              		.cfi_offset 4, -8
+  51              		.cfi_offset 14, -4
+  52              	.LVL1:
+  53              	.L2:
+ 190:Core/Src/app_freertos.c ****   /* USER CODE BEGIN default_thread_func */
+ 191:Core/Src/app_freertos.c ****   /* Infinite loop */
+ 192:Core/Src/app_freertos.c ****   for(;;)
+  54              		.loc 1 192 3 is_stmt 1 discriminator 1 view .LVU2
+ 193:Core/Src/app_freertos.c ****   {
+ 194:Core/Src/app_freertos.c **** 	HAL_GPIO_TogglePin(LED4_GPIO_Port, LED4_Pin);
+  55              		.loc 1 194 2 discriminator 1 view .LVU3
+  56 0002 8021     		movs	r1, #128
+  57 0004 4900     		lsls	r1, r1, #1
+  58 0006 0448     		ldr	r0, .L3
+  59 0008 FFF7FEFF 		bl	HAL_GPIO_TogglePin
+  60              	.LVL2:
+ 195:Core/Src/app_freertos.c ****     osDelay(500);
+  61              		.loc 1 195 5 discriminator 1 view .LVU4
+  62 000c FA20     		movs	r0, #250
+  63 000e 4000     		lsls	r0, r0, #1
+  64 0010 FFF7FEFF 		bl	osDelay
+  65              	.LVL3:
+ 192:Core/Src/app_freertos.c ****   {
+  66              		.loc 1 192 8 discriminator 1 view .LVU5
+  67 0014 F5E7     		b	.L2
+  68              	.L4:
+  69 0016 C046     		.align	2
+  70              	.L3:
+  71 0018 00040050 		.word	1342178304
+  72              		.cfi_endproc
+  73              	.LFE329:
+  75              		.section	.text.vApplicationStackOverflowHook,"ax",%progbits
+  76              		.align	1
+  77              		.weak	vApplicationStackOverflowHook
+  78              		.syntax unified
+  79              		.code	16
+  80              		.thumb_func
+  82              	vApplicationStackOverflowHook:
+ARM GAS  /tmp/ccH7xXRT.s 			page 6
+
+
+  83              	.LVL4:
+  84              	.LFB327:
+  84:Core/Src/app_freertos.c ****    /* Run time stack overflow checking is performed if
+  85              		.loc 1 84 1 view -0
+  86              		.cfi_startproc
+  87              		@ args = 0, pretend = 0, frame = 0
+  88              		@ frame_needed = 0, uses_anonymous_args = 0
+  89              		@ link register save eliminated.
+  88:Core/Src/app_freertos.c **** /* USER CODE END 4 */
+  90              		.loc 1 88 1 view .LVU7
+  91              		@ sp needed
+  92 0000 7047     		bx	lr
+  93              		.cfi_endproc
+  94              	.LFE327:
+  96              		.section	.text.MX_FREERTOS_Init,"ax",%progbits
+  97              		.align	1
+  98              		.global	MX_FREERTOS_Init
+  99              		.syntax unified
+ 100              		.code	16
+ 101              		.thumb_func
+ 103              	MX_FREERTOS_Init:
+ 104              	.LFB328:
+  96:Core/Src/app_freertos.c ****   /* USER CODE BEGIN Init */
+ 105              		.loc 1 96 29 view -0
+ 106              		.cfi_startproc
+ 107              		@ args = 0, pretend = 0, frame = 120
+ 108              		@ frame_needed = 0, uses_anonymous_args = 0
+ 109 0000 70B5     		push	{r4, r5, r6, lr}
+ 110              	.LCFI1:
+ 111              		.cfi_def_cfa_offset 16
+ 112              		.cfi_offset 4, -16
+ 113              		.cfi_offset 5, -12
+ 114              		.cfi_offset 6, -8
+ 115              		.cfi_offset 14, -4
+ 116 0002 9EB0     		sub	sp, sp, #120
+ 117              	.LCFI2:
+ 118              		.cfi_def_cfa_offset 136
+  98:Core/Src/app_freertos.c ****   uart_thread_init();
+ 119              		.loc 1 98 3 view .LVU9
+ 120 0004 FFF7FEFF 		bl	lp262_thread_init
+ 121              	.LVL5:
+  99:Core/Src/app_freertos.c ****   main_thread_init();
+ 122              		.loc 1 99 3 view .LVU10
+ 123 0008 FFF7FEFF 		bl	uart_thread_init
+ 124              	.LVL6:
+ 100:Core/Src/app_freertos.c ****   // keep debug init at the last
+ 125              		.loc 1 100 3 view .LVU11
+ 126 000c FFF7FEFF 		bl	main_thread_init
+ 127              	.LVL7:
+ 102:Core/Src/app_freertos.c ****   /* USER CODE END Init */
+ 128              		.loc 1 102 3 view .LVU12
+ 129 0010 FFF7FEFF 		bl	debug_init
+ 130              	.LVL8:
+ 106:Core/Src/app_freertos.c ****   fsm_event_mtxHandle = osMutexCreate(osMutex(fsm_event_mtx));
+ 131              		.loc 1 106 3 view .LVU13
+ 132 0014 0024     		movs	r4, #0
+ 133 0016 1D94     		str	r4, [sp, #116]
+ARM GAS  /tmp/ccH7xXRT.s 			page 7
+
+
+ 107:Core/Src/app_freertos.c **** 
+ 134              		.loc 1 107 3 view .LVU14
+ 107:Core/Src/app_freertos.c **** 
+ 135              		.loc 1 107 25 is_stmt 0 view .LVU15
+ 136 0018 1DA8     		add	r0, sp, #116
+ 137 001a FFF7FEFF 		bl	osMutexCreate
+ 138              	.LVL9:
+ 107:Core/Src/app_freertos.c **** 
+ 139              		.loc 1 107 23 view .LVU16
+ 140 001e 354B     		ldr	r3, .L7
+ 141 0020 1860     		str	r0, [r3]
+ 110:Core/Src/app_freertos.c ****   uart1_mtxHandle = osMutexCreate(osMutex(uart1_mtx));
+ 142              		.loc 1 110 3 is_stmt 1 view .LVU17
+ 143 0022 1C94     		str	r4, [sp, #112]
+ 111:Core/Src/app_freertos.c **** 
+ 144              		.loc 1 111 3 view .LVU18
+ 111:Core/Src/app_freertos.c **** 
+ 145              		.loc 1 111 21 is_stmt 0 view .LVU19
+ 146 0024 1CA8     		add	r0, sp, #112
+ 147 0026 FFF7FEFF 		bl	osMutexCreate
+ 148              	.LVL10:
+ 111:Core/Src/app_freertos.c **** 
+ 149              		.loc 1 111 19 view .LVU20
+ 150 002a 334B     		ldr	r3, .L7+4
+ 151 002c 1860     		str	r0, [r3]
+ 114:Core/Src/app_freertos.c ****   uart2_mtxHandle = osMutexCreate(osMutex(uart2_mtx));
+ 152              		.loc 1 114 3 is_stmt 1 view .LVU21
+ 153 002e 1B94     		str	r4, [sp, #108]
+ 115:Core/Src/app_freertos.c **** 
+ 154              		.loc 1 115 3 view .LVU22
+ 115:Core/Src/app_freertos.c **** 
+ 155              		.loc 1 115 21 is_stmt 0 view .LVU23
+ 156 0030 1BA8     		add	r0, sp, #108
+ 157 0032 FFF7FEFF 		bl	osMutexCreate
+ 158              	.LVL11:
+ 115:Core/Src/app_freertos.c **** 
+ 159              		.loc 1 115 19 view .LVU24
+ 160 0036 314B     		ldr	r3, .L7+8
+ 161 0038 1860     		str	r0, [r3]
+ 118:Core/Src/app_freertos.c ****   uart3_mtxHandle = osMutexCreate(osMutex(uart3_mtx));
+ 162              		.loc 1 118 3 is_stmt 1 view .LVU25
+ 163 003a 1A94     		str	r4, [sp, #104]
+ 119:Core/Src/app_freertos.c **** 
+ 164              		.loc 1 119 3 view .LVU26
+ 119:Core/Src/app_freertos.c **** 
+ 165              		.loc 1 119 21 is_stmt 0 view .LVU27
+ 166 003c 1AA8     		add	r0, sp, #104
+ 167 003e FFF7FEFF 		bl	osMutexCreate
+ 168              	.LVL12:
+ 119:Core/Src/app_freertos.c **** 
+ 169              		.loc 1 119 19 view .LVU28
+ 170 0042 2F4B     		ldr	r3, .L7+12
+ 171 0044 1860     		str	r0, [r3]
+ 122:Core/Src/app_freertos.c ****   uart4_mtxHandle = osMutexCreate(osMutex(uart4_mtx));
+ 172              		.loc 1 122 3 is_stmt 1 view .LVU29
+ 173 0046 1994     		str	r4, [sp, #100]
+ 123:Core/Src/app_freertos.c **** 
+ARM GAS  /tmp/ccH7xXRT.s 			page 8
+
+
+ 174              		.loc 1 123 3 view .LVU30
+ 123:Core/Src/app_freertos.c **** 
+ 175              		.loc 1 123 21 is_stmt 0 view .LVU31
+ 176 0048 19A8     		add	r0, sp, #100
+ 177 004a FFF7FEFF 		bl	osMutexCreate
+ 178              	.LVL13:
+ 123:Core/Src/app_freertos.c **** 
+ 179              		.loc 1 123 19 view .LVU32
+ 180 004e 2D4B     		ldr	r3, .L7+16
+ 181 0050 1860     		str	r0, [r3]
+ 131:Core/Src/app_freertos.c ****   uart1_send_semHandle = osSemaphoreCreate(osSemaphore(uart1_send_sem), 1);
+ 182              		.loc 1 131 3 is_stmt 1 view .LVU33
+ 183 0052 1894     		str	r4, [sp, #96]
+ 132:Core/Src/app_freertos.c **** 
+ 184              		.loc 1 132 3 view .LVU34
+ 132:Core/Src/app_freertos.c **** 
+ 185              		.loc 1 132 26 is_stmt 0 view .LVU35
+ 186 0054 0121     		movs	r1, #1
+ 187 0056 18A8     		add	r0, sp, #96
+ 188 0058 FFF7FEFF 		bl	osSemaphoreCreate
+ 189              	.LVL14:
+ 132:Core/Src/app_freertos.c **** 
+ 190              		.loc 1 132 24 view .LVU36
+ 191 005c 2A4B     		ldr	r3, .L7+20
+ 192 005e 1860     		str	r0, [r3]
+ 135:Core/Src/app_freertos.c ****   uart2_send_semHandle = osSemaphoreCreate(osSemaphore(uart2_send_sem), 1);
+ 193              		.loc 1 135 3 is_stmt 1 view .LVU37
+ 194 0060 1794     		str	r4, [sp, #92]
+ 136:Core/Src/app_freertos.c **** 
+ 195              		.loc 1 136 3 view .LVU38
+ 136:Core/Src/app_freertos.c **** 
+ 196              		.loc 1 136 26 is_stmt 0 view .LVU39
+ 197 0062 0121     		movs	r1, #1
+ 198 0064 17A8     		add	r0, sp, #92
+ 199 0066 FFF7FEFF 		bl	osSemaphoreCreate
+ 200              	.LVL15:
+ 136:Core/Src/app_freertos.c **** 
+ 201              		.loc 1 136 24 view .LVU40
+ 202 006a 284B     		ldr	r3, .L7+24
+ 203 006c 1860     		str	r0, [r3]
+ 139:Core/Src/app_freertos.c ****   uart3_send_semHandle = osSemaphoreCreate(osSemaphore(uart3_send_sem), 1);
+ 204              		.loc 1 139 3 is_stmt 1 view .LVU41
+ 205 006e 1694     		str	r4, [sp, #88]
+ 140:Core/Src/app_freertos.c **** 
+ 206              		.loc 1 140 3 view .LVU42
+ 140:Core/Src/app_freertos.c **** 
+ 207              		.loc 1 140 26 is_stmt 0 view .LVU43
+ 208 0070 0121     		movs	r1, #1
+ 209 0072 16A8     		add	r0, sp, #88
+ 210 0074 FFF7FEFF 		bl	osSemaphoreCreate
+ 211              	.LVL16:
+ 140:Core/Src/app_freertos.c **** 
+ 212              		.loc 1 140 24 view .LVU44
+ 213 0078 254B     		ldr	r3, .L7+28
+ 214 007a 1860     		str	r0, [r3]
+ 143:Core/Src/app_freertos.c ****   uart4_send_semHandle = osSemaphoreCreate(osSemaphore(uart4_send_sem), 1);
+ 215              		.loc 1 143 3 is_stmt 1 view .LVU45
+ARM GAS  /tmp/ccH7xXRT.s 			page 9
+
+
+ 216 007c 1594     		str	r4, [sp, #84]
+ 144:Core/Src/app_freertos.c **** 
+ 217              		.loc 1 144 3 view .LVU46
+ 144:Core/Src/app_freertos.c **** 
+ 218              		.loc 1 144 26 is_stmt 0 view .LVU47
+ 219 007e 0121     		movs	r1, #1
+ 220 0080 15A8     		add	r0, sp, #84
+ 221 0082 FFF7FEFF 		bl	osSemaphoreCreate
+ 222              	.LVL17:
+ 144:Core/Src/app_freertos.c **** 
+ 223              		.loc 1 144 24 view .LVU48
+ 224 0086 234B     		ldr	r3, .L7+32
+ 225 0088 1860     		str	r0, [r3]
+ 160:Core/Src/app_freertos.c ****   default_threadHandle = osThreadCreate(osThread(default_thread), NULL);
+ 226              		.loc 1 160 3 is_stmt 1 view .LVU49
+ 227 008a 10A8     		add	r0, sp, #64
+ 228 008c 224C     		ldr	r4, .L7+36
+ 229 008e 0300     		movs	r3, r0
+ 230 0090 2200     		movs	r2, r4
+ 231 0092 62CA     		ldmia	r2!, {r1, r5, r6}
+ 232 0094 62C3     		stmia	r3!, {r1, r5, r6}
+ 233 0096 22CA     		ldmia	r2!, {r1, r5}
+ 234 0098 22C3     		stmia	r3!, {r1, r5}
+ 161:Core/Src/app_freertos.c **** 
+ 235              		.loc 1 161 3 view .LVU50
+ 161:Core/Src/app_freertos.c **** 
+ 236              		.loc 1 161 26 is_stmt 0 view .LVU51
+ 237 009a 0021     		movs	r1, #0
+ 238 009c FFF7FEFF 		bl	osThreadCreate
+ 239              	.LVL18:
+ 161:Core/Src/app_freertos.c **** 
+ 240              		.loc 1 161 24 view .LVU52
+ 241 00a0 1E4B     		ldr	r3, .L7+40
+ 242 00a2 1860     		str	r0, [r3]
+ 164:Core/Src/app_freertos.c ****   main_threadHandle = osThreadCreate(osThread(main_thread), NULL);
+ 243              		.loc 1 164 3 is_stmt 1 view .LVU53
+ 244 00a4 0BA8     		add	r0, sp, #44
+ 245 00a6 2300     		movs	r3, r4
+ 246 00a8 1433     		adds	r3, r3, #20
+ 247 00aa 0200     		movs	r2, r0
+ 248 00ac 62CB     		ldmia	r3!, {r1, r5, r6}
+ 249 00ae 62C2     		stmia	r2!, {r1, r5, r6}
+ 250 00b0 22CB     		ldmia	r3!, {r1, r5}
+ 251 00b2 22C2     		stmia	r2!, {r1, r5}
+ 165:Core/Src/app_freertos.c **** 
+ 252              		.loc 1 165 3 view .LVU54
+ 165:Core/Src/app_freertos.c **** 
+ 253              		.loc 1 165 23 is_stmt 0 view .LVU55
+ 254 00b4 0021     		movs	r1, #0
+ 255 00b6 FFF7FEFF 		bl	osThreadCreate
+ 256              	.LVL19:
+ 165:Core/Src/app_freertos.c **** 
+ 257              		.loc 1 165 21 view .LVU56
+ 258 00ba 194B     		ldr	r3, .L7+44
+ 259 00bc 1860     		str	r0, [r3]
+ 168:Core/Src/app_freertos.c ****   lp262_threadHandle = osThreadCreate(osThread(lp262_thread), NULL);
+ 260              		.loc 1 168 3 is_stmt 1 view .LVU57
+ARM GAS  /tmp/ccH7xXRT.s 			page 10
+
+
+ 261 00be 06A8     		add	r0, sp, #24
+ 262 00c0 2300     		movs	r3, r4
+ 263 00c2 2833     		adds	r3, r3, #40
+ 264 00c4 0200     		movs	r2, r0
+ 265 00c6 62CB     		ldmia	r3!, {r1, r5, r6}
+ 266 00c8 62C2     		stmia	r2!, {r1, r5, r6}
+ 267 00ca 22CB     		ldmia	r3!, {r1, r5}
+ 268 00cc 22C2     		stmia	r2!, {r1, r5}
+ 169:Core/Src/app_freertos.c **** 
+ 269              		.loc 1 169 3 view .LVU58
+ 169:Core/Src/app_freertos.c **** 
+ 270              		.loc 1 169 24 is_stmt 0 view .LVU59
+ 271 00ce 0021     		movs	r1, #0
+ 272 00d0 FFF7FEFF 		bl	osThreadCreate
+ 273              	.LVL20:
+ 169:Core/Src/app_freertos.c **** 
+ 274              		.loc 1 169 22 view .LVU60
+ 275 00d4 134B     		ldr	r3, .L7+48
+ 276 00d6 1860     		str	r0, [r3]
+ 172:Core/Src/app_freertos.c ****   uart_threadHandle = osThreadCreate(osThread(uart_thread), NULL);
+ 277              		.loc 1 172 3 is_stmt 1 view .LVU61
+ 278 00d8 01A8     		add	r0, sp, #4
+ 279 00da 3C34     		adds	r4, r4, #60
+ 280 00dc 0200     		movs	r2, r0
+ 281 00de 2ACC     		ldmia	r4!, {r1, r3, r5}
+ 282 00e0 2AC2     		stmia	r2!, {r1, r3, r5}
+ 283 00e2 0ACC     		ldmia	r4!, {r1, r3}
+ 284 00e4 0AC2     		stmia	r2!, {r1, r3}
+ 173:Core/Src/app_freertos.c **** 
+ 285              		.loc 1 173 3 view .LVU62
+ 173:Core/Src/app_freertos.c **** 
+ 286              		.loc 1 173 23 is_stmt 0 view .LVU63
+ 287 00e6 0021     		movs	r1, #0
+ 288 00e8 FFF7FEFF 		bl	osThreadCreate
+ 289              	.LVL21:
+ 173:Core/Src/app_freertos.c **** 
+ 290              		.loc 1 173 21 view .LVU64
+ 291 00ec 0E4B     		ldr	r3, .L7+52
+ 292 00ee 1860     		str	r0, [r3]
+ 179:Core/Src/app_freertos.c **** 
+ 293              		.loc 1 179 1 view .LVU65
+ 294 00f0 1EB0     		add	sp, sp, #120
+ 295              		@ sp needed
+ 296 00f2 70BD     		pop	{r4, r5, r6, pc}
+ 297              	.L8:
+ 298              		.align	2
+ 299              	.L7:
+ 300 00f4 00000000 		.word	.LANCHOR0
+ 301 00f8 00000000 		.word	.LANCHOR1
+ 302 00fc 00000000 		.word	.LANCHOR2
+ 303 0100 00000000 		.word	.LANCHOR3
+ 304 0104 00000000 		.word	.LANCHOR4
+ 305 0108 00000000 		.word	.LANCHOR5
+ 306 010c 00000000 		.word	.LANCHOR6
+ 307 0110 00000000 		.word	.LANCHOR7
+ 308 0114 00000000 		.word	.LANCHOR8
+ 309 0118 00000000 		.word	.LANCHOR9
+ARM GAS  /tmp/ccH7xXRT.s 			page 11
+
+
+ 310 011c 00000000 		.word	.LANCHOR10
+ 311 0120 00000000 		.word	.LANCHOR11
+ 312 0124 00000000 		.word	.LANCHOR12
+ 313 0128 00000000 		.word	.LANCHOR13
+ 314              		.cfi_endproc
+ 315              	.LFE328:
+ 317              		.global	uart4_send_semHandle
+ 318              		.global	uart3_send_semHandle
+ 319              		.global	uart2_send_semHandle
+ 320              		.global	uart1_send_semHandle
+ 321              		.global	uart4_mtxHandle
+ 322              		.global	uart3_mtxHandle
+ 323              		.global	uart2_mtxHandle
+ 324              		.global	uart1_mtxHandle
+ 325              		.global	fsm_event_mtxHandle
+ 326              		.global	uart_threadHandle
+ 327              		.global	lp262_threadHandle
+ 328              		.global	main_threadHandle
+ 329              		.global	default_threadHandle
+ 330              		.section	.rodata
+ 331              		.align	2
+ 332              		.set	.LANCHOR9,. + 0
+ 333              	.LC17:
+ 334 0000 00000000 		.word	.LC0
+ 335 0004 00000000 		.word	default_thread_func
+ 336 0008 FDFF     		.short	-3
+ 337 000a 0000     		.space	2
+ 338 000c 00000000 		.word	0
+ 339 0010 80000000 		.word	128
+ 340              	.LC20:
+ 341 0014 10000000 		.word	.LC2
+ 342 0018 00000000 		.word	main_thread_func
+ 343 001c 0000     		.short	0
+ 344 001e 0000     		.space	2
+ 345 0020 00000000 		.word	0
+ 346 0024 80000000 		.word	128
+ 347              	.LC22:
+ 348 0028 1C000000 		.word	.LC4
+ 349 002c 00000000 		.word	lp262_thread_func
+ 350 0030 0000     		.short	0
+ 351 0032 0000     		.space	2
+ 352 0034 00000000 		.word	0
+ 353 0038 80000000 		.word	128
+ 354              	.LC24:
+ 355 003c 2C000000 		.word	.LC6
+ 356 0040 00000000 		.word	uart_thread_func
+ 357 0044 0300     		.short	3
+ 358 0046 0000     		.space	2
+ 359 0048 00000000 		.word	0
+ 360 004c 80000000 		.word	128
+ 361              		.section	.bss.default_threadHandle,"aw",%nobits
+ 362              		.align	2
+ 363              		.set	.LANCHOR10,. + 0
+ 366              	default_threadHandle:
+ 367 0000 00000000 		.space	4
+ 368              		.section	.bss.fsm_event_mtxHandle,"aw",%nobits
+ 369              		.align	2
+ARM GAS  /tmp/ccH7xXRT.s 			page 12
+
+
+ 370              		.set	.LANCHOR0,. + 0
+ 373              	fsm_event_mtxHandle:
+ 374 0000 00000000 		.space	4
+ 375              		.section	.bss.lp262_threadHandle,"aw",%nobits
+ 376              		.align	2
+ 377              		.set	.LANCHOR12,. + 0
+ 380              	lp262_threadHandle:
+ 381 0000 00000000 		.space	4
+ 382              		.section	.bss.main_threadHandle,"aw",%nobits
+ 383              		.align	2
+ 384              		.set	.LANCHOR11,. + 0
+ 387              	main_threadHandle:
+ 388 0000 00000000 		.space	4
+ 389              		.section	.bss.uart1_mtxHandle,"aw",%nobits
+ 390              		.align	2
+ 391              		.set	.LANCHOR1,. + 0
+ 394              	uart1_mtxHandle:
+ 395 0000 00000000 		.space	4
+ 396              		.section	.bss.uart1_send_semHandle,"aw",%nobits
+ 397              		.align	2
+ 398              		.set	.LANCHOR5,. + 0
+ 401              	uart1_send_semHandle:
+ 402 0000 00000000 		.space	4
+ 403              		.section	.bss.uart2_mtxHandle,"aw",%nobits
+ 404              		.align	2
+ 405              		.set	.LANCHOR2,. + 0
+ 408              	uart2_mtxHandle:
+ 409 0000 00000000 		.space	4
+ 410              		.section	.bss.uart2_send_semHandle,"aw",%nobits
+ 411              		.align	2
+ 412              		.set	.LANCHOR6,. + 0
+ 415              	uart2_send_semHandle:
+ 416 0000 00000000 		.space	4
+ 417              		.section	.bss.uart3_mtxHandle,"aw",%nobits
+ 418              		.align	2
+ 419              		.set	.LANCHOR3,. + 0
+ 422              	uart3_mtxHandle:
+ 423 0000 00000000 		.space	4
+ 424              		.section	.bss.uart3_send_semHandle,"aw",%nobits
+ 425              		.align	2
+ 426              		.set	.LANCHOR7,. + 0
+ 429              	uart3_send_semHandle:
+ 430 0000 00000000 		.space	4
+ 431              		.section	.bss.uart4_mtxHandle,"aw",%nobits
+ 432              		.align	2
+ 433              		.set	.LANCHOR4,. + 0
+ 436              	uart4_mtxHandle:
+ 437 0000 00000000 		.space	4
+ 438              		.section	.bss.uart4_send_semHandle,"aw",%nobits
+ 439              		.align	2
+ 440              		.set	.LANCHOR8,. + 0
+ 443              	uart4_send_semHandle:
+ 444 0000 00000000 		.space	4
+ 445              		.section	.bss.uart_threadHandle,"aw",%nobits
+ 446              		.align	2
+ 447              		.set	.LANCHOR13,. + 0
+ 450              	uart_threadHandle:
+ARM GAS  /tmp/ccH7xXRT.s 			page 13
+
+
+ 451 0000 00000000 		.space	4
+ 452              		.text
+ 453              	.Letext0:
+ 454              		.file 2 "/home/yiyu/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/machine/_default_types.h"
+ 455              		.file 3 "/home/yiyu/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/sys/_stdint.h"
+ 456              		.file 4 "Middlewares/Third_Party/FreeRTOS/Source/include/task.h"
+ 457              		.file 5 "Drivers/CMSIS/Device/ST/STM32G0xx/Include/stm32g071xx.h"
+ 458              		.file 6 "Middlewares/Third_Party/FreeRTOS/Source/include/queue.h"
+ 459              		.file 7 "Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h"
+ 460              		.file 8 "Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h"
+ 461              		.file 9 "Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_ll_dma.h"
+ 462              		.file 10 "Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_gpio.h"
+ARM GAS  /tmp/ccH7xXRT.s 			page 14
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 app_freertos.c
+     /tmp/ccH7xXRT.s:15     .rodata.str1.4:0000000000000000 $d
+     /tmp/ccH7xXRT.s:31     .text.default_thread_func:0000000000000000 $t
+     /tmp/ccH7xXRT.s:37     .text.default_thread_func:0000000000000000 default_thread_func
+     /tmp/ccH7xXRT.s:71     .text.default_thread_func:0000000000000018 $d
+     /tmp/ccH7xXRT.s:76     .text.vApplicationStackOverflowHook:0000000000000000 $t
+     /tmp/ccH7xXRT.s:82     .text.vApplicationStackOverflowHook:0000000000000000 vApplicationStackOverflowHook
+     /tmp/ccH7xXRT.s:97     .text.MX_FREERTOS_Init:0000000000000000 $t
+     /tmp/ccH7xXRT.s:103    .text.MX_FREERTOS_Init:0000000000000000 MX_FREERTOS_Init
+     /tmp/ccH7xXRT.s:300    .text.MX_FREERTOS_Init:00000000000000f4 $d
+     /tmp/ccH7xXRT.s:443    .bss.uart4_send_semHandle:0000000000000000 uart4_send_semHandle
+     /tmp/ccH7xXRT.s:429    .bss.uart3_send_semHandle:0000000000000000 uart3_send_semHandle
+     /tmp/ccH7xXRT.s:415    .bss.uart2_send_semHandle:0000000000000000 uart2_send_semHandle
+     /tmp/ccH7xXRT.s:401    .bss.uart1_send_semHandle:0000000000000000 uart1_send_semHandle
+     /tmp/ccH7xXRT.s:436    .bss.uart4_mtxHandle:0000000000000000 uart4_mtxHandle
+     /tmp/ccH7xXRT.s:422    .bss.uart3_mtxHandle:0000000000000000 uart3_mtxHandle
+     /tmp/ccH7xXRT.s:408    .bss.uart2_mtxHandle:0000000000000000 uart2_mtxHandle
+     /tmp/ccH7xXRT.s:394    .bss.uart1_mtxHandle:0000000000000000 uart1_mtxHandle
+     /tmp/ccH7xXRT.s:373    .bss.fsm_event_mtxHandle:0000000000000000 fsm_event_mtxHandle
+     /tmp/ccH7xXRT.s:450    .bss.uart_threadHandle:0000000000000000 uart_threadHandle
+     /tmp/ccH7xXRT.s:380    .bss.lp262_threadHandle:0000000000000000 lp262_threadHandle
+     /tmp/ccH7xXRT.s:387    .bss.main_threadHandle:0000000000000000 main_threadHandle
+     /tmp/ccH7xXRT.s:366    .bss.default_threadHandle:0000000000000000 default_threadHandle
+     /tmp/ccH7xXRT.s:331    .rodata:0000000000000000 $d
+     /tmp/ccH7xXRT.s:362    .bss.default_threadHandle:0000000000000000 $d
+     /tmp/ccH7xXRT.s:369    .bss.fsm_event_mtxHandle:0000000000000000 $d
+     /tmp/ccH7xXRT.s:376    .bss.lp262_threadHandle:0000000000000000 $d
+     /tmp/ccH7xXRT.s:383    .bss.main_threadHandle:0000000000000000 $d
+     /tmp/ccH7xXRT.s:390    .bss.uart1_mtxHandle:0000000000000000 $d
+     /tmp/ccH7xXRT.s:397    .bss.uart1_send_semHandle:0000000000000000 $d
+     /tmp/ccH7xXRT.s:404    .bss.uart2_mtxHandle:0000000000000000 $d
+     /tmp/ccH7xXRT.s:411    .bss.uart2_send_semHandle:0000000000000000 $d
+     /tmp/ccH7xXRT.s:418    .bss.uart3_mtxHandle:0000000000000000 $d
+     /tmp/ccH7xXRT.s:425    .bss.uart3_send_semHandle:0000000000000000 $d
+     /tmp/ccH7xXRT.s:432    .bss.uart4_mtxHandle:0000000000000000 $d
+     /tmp/ccH7xXRT.s:439    .bss.uart4_send_semHandle:0000000000000000 $d
+     /tmp/ccH7xXRT.s:446    .bss.uart_threadHandle:0000000000000000 $d
+
+UNDEFINED SYMBOLS
+HAL_GPIO_TogglePin
+osDelay
+lp262_thread_init
+uart_thread_init
+main_thread_init
+debug_init
+osMutexCreate
+osSemaphoreCreate
+osThreadCreate
+main_thread_func
+lp262_thread_func
+uart_thread_func

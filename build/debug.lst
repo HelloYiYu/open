@@ -1,0 +1,198 @@
+ARM GAS  /tmp/ccp55FKg.s 			page 1
+
+
+   1              		.cpu cortex-m0plus
+   2              		.arch armv6s-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 0
+  12              		.eabi_attribute 18, 4
+  13              		.file	"debug.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.section	.text.debug_rx_handler,"ax",%progbits
+  18              		.align	1
+  19              		.global	debug_rx_handler
+  20              		.syntax unified
+  21              		.code	16
+  22              		.thumb_func
+  24              	debug_rx_handler:
+  25              	.LVL0:
+  26              	.LFB339:
+  27              		.file 1 "App/debug.c"
+   1:App/debug.c   **** #include "uart_thread.h"
+   2:App/debug.c   **** 
+   3:App/debug.c   **** #include "FreeRTOS.h"
+   4:App/debug.c   **** #include "task.h"
+   5:App/debug.c   **** #include "cmsis_os.h"
+   6:App/debug.c   **** 
+   7:App/debug.c   **** uint8_t debug_buffer[1024];
+   8:App/debug.c   **** osMutexId debug_mtxHandle;
+   9:App/debug.c   **** 
+  10:App/debug.c   **** void debug_rx_handler(uint8_t *data, uint32_t len);
+  11:App/debug.c   **** 
+  12:App/debug.c   **** 
+  13:App/debug.c   **** void debug_init(void)
+  14:App/debug.c   **** {
+  15:App/debug.c   ****     osMutexDef(debug_mtx);
+  16:App/debug.c   ****     debug_mtxHandle = osMutexCreate(osMutex(debug_mtx));
+  17:App/debug.c   **** 
+  18:App/debug.c   ****     register_data_handler(&huart4, debug_rx_handler);
+  19:App/debug.c   **** }
+  20:App/debug.c   **** 
+  21:App/debug.c   **** 
+  22:App/debug.c   **** void debug_rx_handler(uint8_t *data, uint32_t len)
+  23:App/debug.c   **** {
+  28              		.loc 1 23 1 view -0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32              		@ link register save eliminated.
+  24:App/debug.c   **** 
+  25:App/debug.c   **** }
+  33              		.loc 1 25 1 view .LVU1
+ARM GAS  /tmp/ccp55FKg.s 			page 2
+
+
+  34              		@ sp needed
+  35 0000 7047     		bx	lr
+  36              		.cfi_endproc
+  37              	.LFE339:
+  39              		.section	.text.debug_init,"ax",%progbits
+  40              		.align	1
+  41              		.global	debug_init
+  42              		.syntax unified
+  43              		.code	16
+  44              		.thumb_func
+  46              	debug_init:
+  47              	.LFB338:
+  14:App/debug.c   ****     osMutexDef(debug_mtx);
+  48              		.loc 1 14 1 view -0
+  49              		.cfi_startproc
+  50              		@ args = 0, pretend = 0, frame = 8
+  51              		@ frame_needed = 0, uses_anonymous_args = 0
+  52 0000 00B5     		push	{lr}
+  53              	.LCFI0:
+  54              		.cfi_def_cfa_offset 4
+  55              		.cfi_offset 14, -4
+  56 0002 83B0     		sub	sp, sp, #12
+  57              	.LCFI1:
+  58              		.cfi_def_cfa_offset 16
+  15:App/debug.c   ****     debug_mtxHandle = osMutexCreate(osMutex(debug_mtx));
+  59              		.loc 1 15 5 view .LVU3
+  60 0004 0023     		movs	r3, #0
+  61 0006 0193     		str	r3, [sp, #4]
+  16:App/debug.c   **** 
+  62              		.loc 1 16 5 view .LVU4
+  16:App/debug.c   **** 
+  63              		.loc 1 16 23 is_stmt 0 view .LVU5
+  64 0008 01A8     		add	r0, sp, #4
+  65 000a FFF7FEFF 		bl	osMutexCreate
+  66              	.LVL1:
+  16:App/debug.c   **** 
+  67              		.loc 1 16 21 view .LVU6
+  68 000e 044B     		ldr	r3, .L3
+  69 0010 1860     		str	r0, [r3]
+  18:App/debug.c   **** }
+  70              		.loc 1 18 5 is_stmt 1 view .LVU7
+  71 0012 0449     		ldr	r1, .L3+4
+  72 0014 0448     		ldr	r0, .L3+8
+  73 0016 FFF7FEFF 		bl	register_data_handler
+  74              	.LVL2:
+  19:App/debug.c   **** 
+  75              		.loc 1 19 1 is_stmt 0 view .LVU8
+  76 001a 03B0     		add	sp, sp, #12
+  77              		@ sp needed
+  78 001c 00BD     		pop	{pc}
+  79              	.L4:
+  80 001e C046     		.align	2
+  81              	.L3:
+  82 0020 00000000 		.word	.LANCHOR0
+  83 0024 00000000 		.word	debug_rx_handler
+  84 0028 00000000 		.word	huart4
+  85              		.cfi_endproc
+ARM GAS  /tmp/ccp55FKg.s 			page 3
+
+
+  86              	.LFE338:
+  88              		.section	.text.debug_process,"ax",%progbits
+  89              		.align	1
+  90              		.global	debug_process
+  91              		.syntax unified
+  92              		.code	16
+  93              		.thumb_func
+  95              	debug_process:
+  96              	.LFB340:
+  26:App/debug.c   **** 
+  27:App/debug.c   **** /* in main_thread */
+  28:App/debug.c   **** void debug_process(void)
+  29:App/debug.c   **** {
+  97              		.loc 1 29 1 is_stmt 1 view -0
+  98              		.cfi_startproc
+  99              		@ args = 0, pretend = 0, frame = 0
+ 100              		@ frame_needed = 0, uses_anonymous_args = 0
+ 101              		@ link register save eliminated.
+  30:App/debug.c   **** 
+  31:App/debug.c   **** }
+ 102              		.loc 1 31 1 view .LVU10
+ 103              		@ sp needed
+ 104 0000 7047     		bx	lr
+ 105              		.cfi_endproc
+ 106              	.LFE340:
+ 108              		.global	debug_mtxHandle
+ 109              		.global	debug_buffer
+ 110              		.section	.bss.debug_buffer,"aw",%nobits
+ 111              		.align	2
+ 114              	debug_buffer:
+ 115 0000 00000000 		.space	1024
+ 115      00000000 
+ 115      00000000 
+ 115      00000000 
+ 115      00000000 
+ 116              		.section	.bss.debug_mtxHandle,"aw",%nobits
+ 117              		.align	2
+ 118              		.set	.LANCHOR0,. + 0
+ 121              	debug_mtxHandle:
+ 122 0000 00000000 		.space	4
+ 123              		.text
+ 124              	.Letext0:
+ 125              		.file 2 "/home/yiyu/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/machine/_default_types.h"
+ 126              		.file 3 "/home/yiyu/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/sys/_stdint.h"
+ 127              		.file 4 "Middlewares/Third_Party/FreeRTOS/Source/include/queue.h"
+ 128              		.file 5 "Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h"
+ 129              		.file 6 "Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h"
+ 130              		.file 7 "Drivers/CMSIS/Device/ST/STM32G0xx/Include/stm32g071xx.h"
+ 131              		.file 8 "Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_def.h"
+ 132              		.file 9 "Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_dma.h"
+ 133              		.file 10 "Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_hal_uart.h"
+ 134              		.file 11 "Core/Inc/usart.h"
+ 135              		.file 12 "Drivers/STM32G0xx_HAL_Driver/Inc/stm32g0xx_ll_dma.h"
+ 136              		.file 13 "App/Include/uart_thread.h"
+ARM GAS  /tmp/ccp55FKg.s 			page 4
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 debug.c
+     /tmp/ccp55FKg.s:18     .text.debug_rx_handler:0000000000000000 $t
+     /tmp/ccp55FKg.s:24     .text.debug_rx_handler:0000000000000000 debug_rx_handler
+     /tmp/ccp55FKg.s:40     .text.debug_init:0000000000000000 $t
+     /tmp/ccp55FKg.s:46     .text.debug_init:0000000000000000 debug_init
+     /tmp/ccp55FKg.s:82     .text.debug_init:0000000000000020 $d
+     /tmp/ccp55FKg.s:89     .text.debug_process:0000000000000000 $t
+     /tmp/ccp55FKg.s:95     .text.debug_process:0000000000000000 debug_process
+     /tmp/ccp55FKg.s:121    .bss.debug_mtxHandle:0000000000000000 debug_mtxHandle
+     /tmp/ccp55FKg.s:114    .bss.debug_buffer:0000000000000000 debug_buffer
+     /tmp/ccp55FKg.s:111    .bss.debug_buffer:0000000000000000 $d
+     /tmp/ccp55FKg.s:117    .bss.debug_mtxHandle:0000000000000000 $d
+
+UNDEFINED SYMBOLS
+osMutexCreate
+register_data_handler
+huart4
